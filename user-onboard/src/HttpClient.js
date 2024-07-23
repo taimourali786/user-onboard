@@ -1,0 +1,3 @@
+const performGet = (url, queryParams) => {
+
+}
