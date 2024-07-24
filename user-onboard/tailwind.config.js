@@ -3,7 +3,11 @@ export default {
   content: ["./index.html",
     "./src/**/*.{html,js,jsx}"],
   theme: {
-    extend: {},
+    extend: {
+      margin:{
+        '1/2' : '50%'
+      }
+    },
   },
   plugins: [],
 }

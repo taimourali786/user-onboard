@@ -2,7 +2,7 @@ export default function FormField({ htmlFor, labelText, value, isInvalid, errorM
 
     return (
         <div className="">
-            <label htmlFor={htmlFor}>{labelText}</label>
+            <label htmlFor={htmlFor} className="block">{labelText}</label>
             <input
                 onChange={handleChange}
                 onBlur={handleBlur}
