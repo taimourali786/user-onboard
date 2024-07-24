@@ -1,9 +1,10 @@
-export default function FormField({ htmlFor, labelText, value, isInvalid, errorMessage, handleChange, handleBlur, ...props }) {
+export default function FormField({ htmlFor, labelText, value, isInvalid, errorMessage, handleChange, handleBlur, labelClassName, inputClassName, ...props }) {
 
     return (
         <div className="">
-            <label htmlFor={htmlFor} className="block">{labelText}</label>
+            <label htmlFor={htmlFor} className={labelClassName}>{labelText}</label>
             <input
+                className={inputClassName}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={value}
