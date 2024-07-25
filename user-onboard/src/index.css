@@ -5,6 +5,3 @@
 body{
     background-color: #f0f0f0;
 }
-.form-container{
-    @apply p-20 border-2 border-black
-}
