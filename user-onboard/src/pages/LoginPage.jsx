@@ -73,6 +73,7 @@ export default function LoginPage() {
     return (
         <>
             <main>
+            
                 <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-300 to-gray-500">
                     <div className="max-w-md w-full bg-white shadow-md rounded-lg p-8">
                         <FormHeading>Login to Your Account</FormHeading>
