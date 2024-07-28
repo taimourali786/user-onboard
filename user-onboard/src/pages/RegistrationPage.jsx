@@ -9,6 +9,8 @@ import Step1 from '../components/formsteps/Step-1';
 import Step2 from '../components/formsteps/Step-2';
 import Step3 from '../components/formsteps/Step-3';
 import Step4 from '../components/formsteps/Step-4';
+import Step5 from '../components/formsteps/Step-5';
+import Step6 from '../components/formsteps/Step-6';
 
 const initialUserState = {
   step1: {
@@ -30,7 +32,13 @@ const initialUserState = {
     pref4: true,
     pref5: false
   },
-  step5: {},
+  step5: {
+    cardNumber: "",
+    expiry: "",
+    cvv: "",
+    name: "",
+    address: ""
+  },
   step6: {}
 }
 function RegistrationPage() {
@@ -42,8 +50,8 @@ function RegistrationPage() {
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
-  
-  const handleSkip = ()=> {
+
+  const handleSkip = () => {
     //perform some functions
     handleNext();
   }
@@ -57,6 +65,11 @@ function RegistrationPage() {
   }
 
   const handleStepFoureNext = (formData) => {
+    // calll api
+    handleNext();
+  }
+
+  const handleStepFiveNext = (formData) => {
     // calll api
     handleNext();
   }
@@ -118,6 +131,12 @@ function RegistrationPage() {
           <div>
             {Math.abs(activeStep - 3) <= 5 ? <Step4 handleNext={handleStepFoureNext} userData={userData.step4} /> : null}
           </div>
+          <div>
+            {Math.abs(activeStep - 4) <= 5 ? <Step5 handleNext={handleStepFiveNext} userData={userData.step5} /> : null}
+          </div>
+          <div>
+            {Math.abs(activeStep - 5) <= 5 ? <Step6 handleNext={handleStepFoureNext} userData={userData.step4} /> : null}
+          </div>
         </SwipeableViews>
         <MobileStepper
           steps={maxSteps}
@@ -126,7 +145,7 @@ function RegistrationPage() {
           nextButton={
             <Button
               size="small"
-              onClick={handleNext}
+              onClick={handleSkip}
               disabled={skipEnabled}
             >
               {activeStep <= 4 ? "Skip" : "Skip and Submit"}

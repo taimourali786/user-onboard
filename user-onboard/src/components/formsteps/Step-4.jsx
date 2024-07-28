@@ -6,7 +6,7 @@ const Step4 = ({ userData, handleNext }) => {
 
 
     const handleCheckChanged = (event) => {
-        setPreferences(prevValues => 
+        setPreferences(prevValues =>
         ({
             ...prevValues,
             [event.target.name]: event.target.checked
@@ -23,19 +23,12 @@ const Step4 = ({ userData, handleNext }) => {
             label={`${prefKey}`}
         />
     ));
-    // for(const pref in preference.values){
-    //     console.log(pref);
-    //     let prefe = <FormControlLabel control={<Checkbox name={pref.key} onChange={handleCheckChanged} />} label={pref.key} />   
-    //     preferenceCheckboxes.push(prefe);       
-    // }
     return (
         <>
             <Typography> Select User Preferences</Typography>
             <Box>
                 <FormGroup>
-                    {
-                     preferenceCheckboxes   
-                    }
+                    {preferenceCheckboxes}
                 </FormGroup>
             </Box>
             <Box>

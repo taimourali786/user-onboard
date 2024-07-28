@@ -56,29 +56,31 @@ const Step3 = ({ userData, handleNext }) => {
                 margin="normal"
                 variant="outlined"
                 value={formData.dob}
-                error={false}
+                error={!error.dobValid}
+                helperText={!error.dobValid ? "Enter Valid Date of birth" : ""}
                 onChange={event => handleChange("dob", event.target.value)}
             />
             <Box mt={2}>
                 <Typography>Home Address</Typography>
                 <Input
                     fullWidth
-                    label="Address1"
+                    label="Address 1"
                     type="text"
                     margin="normal"
                     variant="outlined"
-                    error={false}
                     value={formData.address1}
                     onChange={event => handleChange("address1", event.target.value)}
-
+                    error={!error.address1Valid}
+                    helperText={!error.address1Valid ? "Enter Valid Address" : ""}
                 />
                 <Input
                     fullWidth
-                    label="Address2"
+                    label="Address 2"
                     type="text"
                     margin="normal"
                     variant="outlined"
-                    error={false}
+                    error={!error.address2Valid}
+                    helperText={!error.address2Valid ? "Enter Valid Date of Address" : ""}
                     value={formData.address2}
                     onChange={event => handleChange("address2", event.target.value)}
 
@@ -91,7 +93,8 @@ const Step3 = ({ userData, handleNext }) => {
                             type="text"
                             margin="normal"
                             variant="outlined"
-                            error={false}
+                            error={!error.cityValid}
+                            helperText={!error.cityValid ? "Enter Valid City" : ""}
                             value={formData.city}
                             onChange={event => handleChange("city", event.target.value)}
 
@@ -104,7 +107,8 @@ const Step3 = ({ userData, handleNext }) => {
                             type="text"
                             margin="normal"
                             variant="outlined"
-                            error={false}
+                            error={!error.countryValid}
+                            helperText={!error.countryValid ? "Enter Valid country" : ""}
                             value={formData.country}
                             onChange={event => handleChange("country", event.target.value)}
                         />
