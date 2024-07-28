@@ -23,7 +23,13 @@ const initialUserState = {
     city: "",
     country: ""
   },
-  step4: {},
+  step4: {
+    pref1: true,
+    pref2: false,
+    pref3: false,
+    pref4: true,
+    pref5: false
+  },
   step5: {},
   step6: {}
 }
@@ -36,8 +42,21 @@ function RegistrationPage() {
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
-
+  
+  const handleSkip = ()=> {
+    //perform some functions
+    handleNext();
+  }
   const handleStepOneNext = (formData) => {
+    // calll api
+    handleNext();
+  }
+  const handleStepThreeNext = (formData) => {
+    // calll api
+    handleNext();
+  }
+
+  const handleStepFoureNext = (formData) => {
     // calll api
     handleNext();
   }
@@ -64,7 +83,7 @@ function RegistrationPage() {
   } else if (activeStep === 5) {
     heading = "Profile Picture"
   }
-
+  let skipEnabled = activeStep < 4
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-300 to-gray-500">
       <div className="max-w-md w-full bg-white shadow-md rounded-lg p-8">
@@ -88,31 +107,31 @@ function RegistrationPage() {
           onChangeIndex={handleStepChange}
         >
           <div>
-            {Math.abs(activeStep - 0) <= 5 ? <Step1 userData={userData.step1} handleNext={handleStepOneNext}/> : null}
+            {Math.abs(activeStep - 0) <= 5 ? <Step1 userData={userData.step1} handleNext={handleStepOneNext} /> : null}
           </div>
           <div>
-            {Math.abs(activeStep - 1) <= 5 ? <Step2 handleNext={handleNext}/> : null}
+            {Math.abs(activeStep - 1) <= 5 ? <Step2 handleNext={handleNext} /> : null}
           </div>
           <div>
-            {Math.abs(activeStep - 2) <= 5 ? <Step3 handleNext={handleNext} userData={userData.step3}/> : null}
+            {Math.abs(activeStep - 2) <= 5 ? <Step3 handleNext={handleStepThreeNext} userData={userData.step3} /> : null}
           </div>
           <div>
-            {Math.abs(activeStep - 3) <= 5 ? <Step4 /> : null}
+            {Math.abs(activeStep - 3) <= 5 ? <Step4 handleNext={handleStepFoureNext} userData={userData.step4} /> : null}
           </div>
         </SwipeableViews>
         <MobileStepper
           steps={maxSteps}
           position="static"
           activeStep={activeStep}
-          // nextButton={
-          //   <Button
-          //     size="small"
-          //     onClick={handleNext}
-          //     disabled={activeStep === maxSteps - 1}
-          //   >
-          //     Next
-          //   </Button>
-          // }
+          nextButton={
+            <Button
+              size="small"
+              onClick={handleNext}
+              disabled={skipEnabled}
+            >
+              {activeStep <= 4 ? "Skip" : "Skip and Submit"}
+            </Button>
+          }
           backButton={
             <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
               Back

@@ -1,23 +1,53 @@
-import { Box, Typography, FormGroup, FormControlLabel, Checkbox } from "@mui/material";
+import { Box, Typography, FormGroup, FormControlLabel, Checkbox, Button } from "@mui/material";
+import { useState } from "react";
 
-const Step4 = () => {
+const Step4 = ({ userData, handleNext }) => {
+    const [preferences, setPreferences] = useState(userData);
+
+
     const handleCheckChanged = (event) => {
-        console.log("Check Changed", event.target.name);
+        setPreferences(prevValues => 
+        ({
+            ...prevValues,
+            [event.target.name]: event.target.checked
+        })
+        )
     }
+    const onNextClick = () => {
+        handleNext();
+    }
+    let preferenceCheckboxes = Object.keys(preferences).map((prefKey) => (
+        <FormControlLabel
+            key={prefKey}
+            control={<Checkbox name={prefKey} onChange={handleCheckChanged} />}
+            label={`${prefKey}`}
+        />
+    ));
+    // for(const pref in preference.values){
+    //     console.log(pref);
+    //     let prefe = <FormControlLabel control={<Checkbox name={pref.key} onChange={handleCheckChanged} />} label={pref.key} />   
+    //     preferenceCheckboxes.push(prefe);       
+    // }
     return (
         <>
             <Typography> Select User Preferences</Typography>
             <Box>
                 <FormGroup>
-                    <FormControlLabel control={<Checkbox name="1" onChange={handleCheckChanged}/>} label="Preference One" />
-                    <FormControlLabel control={<Checkbox name="2" onChange={handleCheckChanged}/>} label="Preference Two" />
-                    <FormControlLabel control={<Checkbox name="3" onChange={handleCheckChanged}/>} label="Preference Three" />
-                    <FormControlLabel control={<Checkbox name="4" onChange={handleCheckChanged}/>} label="Preference Four" />
-                    <FormControlLabel control={<Checkbox name="5" onChange={handleCheckChanged}/>} label="Preference Five" />
-                    <FormControlLabel control={<Checkbox name="6" onChange={handleCheckChanged}/>} label="Preference Six" />
-                    <FormControlLabel control={<Checkbox name="7" onChange={handleCheckChanged}/>} label="Preference Seven" />
+                    {
+                     preferenceCheckboxes   
+                    }
                 </FormGroup>
             </Box>
+            <Box>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={onNextClick}
+                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                    Next
+                </Button>
+            </Box >
         </>
     )
 }

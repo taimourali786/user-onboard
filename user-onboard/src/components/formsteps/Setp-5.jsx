@@ -1,19 +1,11 @@
 import { Button, TextField, Box, Typography, Grid } from '@mui/material';
 import Input from '../base/Input';
 
-const Step3 = () => {
+const Step3 = ({handleNext}) => {
+
     return (
         <Box component="form" noValidate autoComplete="off" sx={{ p: 2 }}>
-            <Input fullWidth
-                label="Date Of Birth"
-                type="date"
-                margin="normal"
-                variant="outlined"
-                error={false} />
-
-
             <Box mt={2}>
-                <Typography>Home Address</Typography>
                 <Input
                     fullWidth
                     label="Address1"
