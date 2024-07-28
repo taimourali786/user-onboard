@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Alert from '@mui/material/Alert';
+import { AuthContext } from '../utils/AuthContext.jsx';
 
 import FormField from "../components/base/FormField.jsx";
 import Button from "../components/base/Button.jsx";
@@ -12,13 +14,13 @@ const isEmailInvalid = (edited, email) => {
 const isPasswordInvalid = (edited, password) => {
     return edited && password.length < 8;
 };
-const dummyUser = { email: "abc@gmail.com", password: "admin123" };
+
 export default function LoginPage() {
 
+    const { login, authError, isAuthenticated } = useContext(AuthContext);
     const [formValues, setFormValues] = useState({ email: '', password: '' });
     const [formValuesEdited, setFormValuesEdited] = useState({ email: false, password: false });
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState({});
     let navigate = useNavigate();
 
 
@@ -49,34 +51,29 @@ export default function LoginPage() {
     const emailInValid = isEmailInvalid(formValuesEdited.email, formValues.email);
     const passwordInValid = isPasswordInvalid(formValuesEdited.password, formValues.password);
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         if (isEmailInvalid(formValuesEdited.email, formValues.email)
             || isPasswordInvalid(formValuesEdited.password, formValues.password)) {
-            setError(true)
             return;
         }
-        if (formValues.email === dummyUser.email
-            && formValues.password === dummyUser.password) {
-            let baseUrl = window.location.origin;
-            let homePageUrl = `${baseUrl}/`
-            // let history = useHistory();
+
+        await login(formValues);
+        if (isAuthenticated) {
             navigate("/");
-            // history.push('/');
             setFormValues({ email: '', password: '' });
             setFormValuesEdited({ email: false, password: false });
-            // window.history.pushState(null, null, '/');
         }
     };
 
     return (
         <>
             <main>
-            
                 <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-300 to-gray-500">
                     <div className="max-w-md w-full bg-white shadow-md rounded-lg p-8">
                         <FormHeading>Login to Your Account</FormHeading>
+                        {authError && <Alert severity="error"> {authError.message} </Alert> }
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <FormField
                                 htmlFor="email"
