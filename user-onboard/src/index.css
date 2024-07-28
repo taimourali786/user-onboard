@@ -2,15 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-body{
-    background-color: #f0f0f0;
+body {
+  background-color: #f0f0f0;
 }
 
 /* Custom styles for input[type=date] */
 input[type="date"]:required:invalid::-webkit-datetime-edit {
-    @apply text-transparent;
-  }
-  
-  input[type="date"]:focus::-webkit-datetime-edit {
-    @apply text-black !important;
-  }
+  @apply text-transparent;
+}
+
+input[type="date"]:focus::-webkit-datetime-edit {
+  @apply text-black !important;
+}

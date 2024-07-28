@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import FormField from "../components/FormField.jsx";
-import Button from "../components/Button.jsx";
-import FormHeading from "../components/FormHeading.jsx";
+import FormField from "../components/base/FormField.jsx";
+import Button from "../components/base/Button.jsx";
+import FormHeading from "../components/base/FormHeading.jsx";
 
 const isEmailInvalid = (edited, email) => {
     return edited && !(email.includes('@') && email.includes(".com"));
