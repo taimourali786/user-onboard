@@ -1,90 +1,129 @@
 import { useState } from 'react';
-import { Button, Box, Typography } from '@mui/material';
-import Input from "../base/Input.jsx";
-import Alert from '@mui/material/Alert';
+import { Button, Box, Typography, Snackbar, Alert } from '@mui/material';
 import { validateStep1 } from '../../utils/Validator.js';
+import FormField from './../base/FormField.jsx';
+import { styled } from '@mui/material/styles';
 
-const initialError =     {
+const initialError = {
   emailValid: true,
   passwordLength: true,
   passwordsMatch: true,
   message: ""
 };
-const Step1 = ({ userData, handleNext }) => {
 
+const CustomButton = styled(Button)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'center',
+  padding: theme.spacing(1.5, 4),
+  border: '1px solid transparent',
+  borderRadius: '0.375rem',
+  boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+  fontSize: '0.875rem',
+  fontWeight: '500',
+  color: theme.palette.common.white,
+  backgroundColor: '#4F46E5',
+  maxHeight: '40px',
+  maxWidth: '80px',
+  '&:hover': {
+    backgroundColor: '#4338CA',
+  },
+  '&:focus': {
+    outline: 'none',
+    boxShadow: '0 0 0 4px rgba(99, 102, 241, 0.5)',
+  },
+  width: 'auto',
+}));
+
+const Step1 = ({ userData, handleNext }) => {
   const [formData, setFormData] = useState(userData);
   const [error, setError] = useState(initialError);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const onNextClick = () => {
-    let error = validateStep1(formData);
+    const error = validateStep1(formData);
     if (error.emailValid && error.passwordLength && error.passwordsMatch) {
       handleNext();
     } else {
-      setError(error)
+      setError(error);
+      setSnackbarOpen(true);
     }
-  }
+  };
 
   const handleChange = (name, value) => {
-    setFormData(prevValues =>
-    ({
+    setFormData(prevValues => ({
       ...prevValues,
       [name]: value
-    })
-    );
+    }));
     setError(initialError);
-  }
+  };
+
   const nextEnabled = formData.email !== '' && formData.password !== '' && formData.confirmPassword !== '';
+
   return (
-    <>
-      {(!error.emailValid || !error.passwordLength || !error.passwordsMatch) && <Alert severity="error"> {error.message} </Alert>}
-      <Box component="form" noValidate autoComplete="off" sx={{ p: 2 }}>
-        <Input
-          fullWidth
-          label="Email"
+    <Box display="flex" flexDirection="column" height="100%">
+      <Box component="form" flex="1" display="flex" flexDirection="column" justifyContent="center" p={2} className="space-y-6">
+        {/* <div>
+          {(!error.emailValid || !error.passwordLength || !error.passwordsMatch) && (
+            <Alert severity="error">{error.message}</Alert>
+          )}
+        </div> */}
+        <FormField
+          htmlFor="email"
+          labelText="Email"
+          id="email"
           type="email"
-          margin="normal"
-          variant="outlined"
-          error={!error.emailValid}
-          helperText={error.emailValid ? "" : "Enter a valid Email"}
+          name="email"
+          isInvalid={!error.emailValid}
           value={formData.email}
-          onChange={event => handleChange("email", event.target.value)}
+          errorMessage="Enter a valid Email"
+          handleChange={event => handleChange("email", event.target.value)}
+          errorStyle={{ borderColor: 'red' }}
+          errorCaptionStyle={{ color: 'red', height: '20px', visibility: error.emailValid ? 'hidden' : 'visible' }}
         />
-        <Input
-          fullWidth
-          label="Password"
+        <FormField
+          htmlFor="password"
+          labelText="Password"
+          id="password"
           type="password"
-          margin="normal"
-          variant="outlined"
+          isInvalid={!error.passwordLength}
+          errorMessage="Password must be 8 characters"
           value={formData.password}
-          error={!error.passwordsMatch || !error.passwordLength}
-          helperText={!error.passwordLength ? "Password Must be 8 characters" : !error.passwordsMatch ? "Password Does not match" : ""}
-          onChange={event => handleChange("password", event.target.value)}
+          handleChange={event => handleChange("password", event.target.value)}
+          errorStyle={{ borderColor: 'red' }}
+          errorCaptionStyle={{ color: 'red', height: '20px', visibility: error.passwordLength ? 'hidden' : 'visible' }}
         />
-        <Typography>Password must be 8 characters</Typography>
-        <Input
-          fullWidth
-          label="Confirm Password"
+        <Typography variant='caption' style={{ marginTop: '5px', height: '20px' }} className="text-sm text-gray-500 mt-1">Password must be at least 8 characters</Typography>
+        <FormField
+          labelText="Confirm Password"
           type="password"
-          margin="normal"
-          variant="outlined"
-          error={!error.passwordsMatch || !error.passwordLength}
-          helperText={!error.passwordLength ? "Password Must be 8 characters" : !error.passwordsMatch ? "Password Does not match" : ""}
+          isInvalid={!error.passwordsMatch || !error.passwordLength}
+          errorMessage="Password does not match"
           value={formData.confirmPassword}
-          onChange={event => handleChange("confirmPassword", event.target.value)}
+          handleChange={event => handleChange("confirmPassword", event.target.value)}
+          errorStyle={{ borderColor: 'red' }}
+          errorCaptionStyle={{ color: 'red', height: '20px', visibility: error.passwordsMatch ? 'hidden' : 'visible' }}
         />
-      </Box >
-      <Box>
-        <Button
+      </Box>
+      <Box display="flex" justifyContent="flex-end" p={2}>
+        <CustomButton
           variant="contained"
-          color="primary"
           onClick={onNextClick}
           disabled={!nextEnabled}
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
           Next
-        </Button>
-      </Box >
-    </>
+        </CustomButton>
+      </Box>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={1000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setSnackbarOpen(false)} severity="error" sx={{ width: '300px' }}>
+          {error.message}
+        </Alert>
+      </Snackbar>
+    </Box>
   );
 };
 

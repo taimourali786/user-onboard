@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import MobileStepper from '@mui/material/MobileStepper';
 import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import SwipeableViews from 'react-swipeable-views';
 import Step1 from '../components/formsteps/Step-1';
@@ -11,6 +10,7 @@ import Step3 from '../components/formsteps/Step-3';
 import Step4 from '../components/formsteps/Step-4';
 import Step5 from '../components/formsteps/Step-5';
 import Step6 from '../components/formsteps/Step-6';
+import FormHeading from '../components/base/FormHeading';
 
 const initialUserState = {
   step1: {
@@ -111,8 +111,7 @@ function RegistrationPage() {
             bgcolor: 'background.default',
           }}
         >
-          <Typography>{heading}</Typography>
-
+          <FormHeading>{heading}</FormHeading>
         </Paper>
         <SwipeableViews
           axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
@@ -147,15 +146,25 @@ function RegistrationPage() {
               size="small"
               onClick={handleSkip}
               disabled={skipEnabled}
+              sx={{color:'#6366F1'}}
             >
               {activeStep <= 4 ? "Skip" : "Skip and Submit"}
             </Button>
           }
           backButton={
-            <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
+            <Button size="small" onClick={handleBack} disabled={activeStep === 0}
+            sx={{color:'#6366F1'}}>
               Back
             </Button>
           }
+          sx={{
+            '& .MuiMobileStepper-dot': {
+              backgroundColor: '#E0E7FF', // Lighter tone for inactive dots
+            },
+            '& .MuiMobileStepper-dotActive': {
+              backgroundColor: '#6366F1', // Lighter tone for active dot
+            },
+          }}
         />
       </div>
     </div>
