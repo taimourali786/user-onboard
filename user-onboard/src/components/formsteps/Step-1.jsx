@@ -42,7 +42,7 @@ const Step1 = ({ userData, handleNext }) => {
   const onNextClick = () => {
     const error = validateStep1(formData);
     if (error.emailValid && error.passwordLength && error.passwordsMatch) {
-      handleNext();
+      handleNext(formData);
     } else {
       setError(error);
       setSnackbarOpen(true);

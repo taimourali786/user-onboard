@@ -13,7 +13,6 @@ const FormField = ({ htmlFor, labelText, value, isInvalid, errorMessage, handleC
         value={value}
         style={isInvalid ? errorStyle : {}}
         {...props}
-        onFocus={() => {console.log("I am focused boys")}}
       />
       <Typography variant="caption" style={{ ...errorCaptionStyle, height: '10px', visibility: isInvalid ? 'visible' : 'hidden' }}>
         {errorMessage}
