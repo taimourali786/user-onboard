@@ -52,6 +52,7 @@ export const performPost = async (url, body = {}) => {
 }
 
 export const performLogin = async (body) => {
+    console.log("Login ")
     try{
         const tokenJson = await performPost(LOGIN, body);
         const token = tokenJson.token;
@@ -66,8 +67,4 @@ export const performLogin = async (body) => {
 const getToken = () => {
     const token = localStorage.getItem("authorization");
     return token;
-}
-
-const setToken = token => {
-    localStorage.setItem("authorization", token);
 }

@@ -2,7 +2,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegistrationPage from './pages/RegistrationPage';
-import ProtectedRoute from './ProtectRoute';
+import ProtectedRoute from './ProtectedRoute';
 
 const router = createBrowserRouter([
   {path: '/', element: <ProtectedRoute element={<HomePage />} />},

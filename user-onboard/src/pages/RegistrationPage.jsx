@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
+import { Link, useNavigate } from 'react-router-dom';
 import MobileStepper from '@mui/material/MobileStepper';
 import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import SwipeableViews from 'react-swipeable-views';
 import Step1 from '../components/formsteps/Step-1';
@@ -11,6 +11,7 @@ import Step3 from '../components/formsteps/Step-3';
 import Step4 from '../components/formsteps/Step-4';
 import Step5 from '../components/formsteps/Step-5';
 import Step6 from '../components/formsteps/Step-6';
+import FormHeading from '../components/base/FormHeading';
 
 const initialUserState = {
   step1: {
@@ -74,6 +75,11 @@ function RegistrationPage() {
     handleNext();
   }
 
+  const handleStepSixNext = (formData) => {
+    // calll api
+
+  }
+
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
@@ -111,8 +117,7 @@ function RegistrationPage() {
             bgcolor: 'background.default',
           }}
         >
-          <Typography>{heading}</Typography>
-
+          <FormHeading>{heading}</FormHeading>
         </Paper>
         <SwipeableViews
           axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
@@ -138,25 +143,44 @@ function RegistrationPage() {
             {Math.abs(activeStep - 5) <= 5 ? <Step6 handleNext={handleStepFoureNext} userData={userData.step4} /> : null}
           </div>
         </SwipeableViews>
-        <MobileStepper
-          steps={maxSteps}
-          position="static"
-          activeStep={activeStep}
-          nextButton={
-            <Button
-              size="small"
-              onClick={handleSkip}
-              disabled={skipEnabled}
-            >
-              {activeStep <= 4 ? "Skip" : "Skip and Submit"}
-            </Button>
-          }
-          backButton={
-            <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
-              Back
-            </Button>
-          }
-        />
+        <div className='mb-5'>
+          <MobileStepper
+            steps={maxSteps}
+            position="static"
+            activeStep={activeStep}
+            nextButton={
+              <Button
+                size="small"
+                onClick={handleSkip}
+                disabled={skipEnabled}
+                sx={{ color: '#6366F1' }}
+              >
+                {activeStep <= 4 ? "Skip" : "Skip and Submit"}
+              </Button>
+            }
+            backButton={
+              <Button size="small" onClick={handleBack} disabled={activeStep === 0}
+                sx={{ color: '#6366F1' }}>
+                Back
+              </Button>
+            }
+            sx={{
+              '& .MuiMobileStepper-dot': {
+                backgroundColor: '#E0E7FF', // Lighter tone for inactive dots
+              },
+              '& .MuiMobileStepper-dotActive': {
+                backgroundColor: '#6366F1', // Lighter tone for active dot
+              },
+            }}
+          />
+        </div>
+
+        <div className="flex items-center justify-center align-middle">
+          <div className="text-sm">
+            Already have an account?
+            <Link to="/login" className="ml-1 font-medium text-indigo-600 hover:text-indigo-500 hover:underline">Log in</Link>
+          </div>
+        </div>
       </div>
     </div>
   );

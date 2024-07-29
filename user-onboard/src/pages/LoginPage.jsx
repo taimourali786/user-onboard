@@ -8,7 +8,7 @@ import Button from "../components/base/Button.jsx";
 import FormHeading from "../components/base/FormHeading.jsx";
 
 const isEmailInvalid = (edited, email) => {
-    return edited && !(email.includes('@') && email.includes(".com"));
+    return edited && !(email.includes('@'));
 };
 
 const isPasswordInvalid = (edited, password) => {
