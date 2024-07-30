@@ -62,11 +62,6 @@ const Step1 = ({ userData, handleNext }) => {
   return (
     <Box display="flex" flexDirection="column" height="100%">
       <Box component="form" flex="1" display="flex" flexDirection="column" justifyContent="center" p={2} className="space-y-6">
-        {/* <div>
-          {(!error.emailValid || !error.passwordLength || !error.passwordsMatch) && (
-            <Alert severity="error">{error.message}</Alert>
-          )}
-        </div> */}
         <FormField
           htmlFor="email"
           labelText="Email"

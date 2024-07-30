@@ -12,6 +12,7 @@ import Step4 from '../components/formsteps/Step-4';
 import Step5 from '../components/formsteps/Step-5';
 import Step6 from '../components/formsteps/Step-6';
 import FormHeading from '../components/base/FormHeading';
+import Logo from '../components/base/Logo';
 
 const initialUserState = {
   step1: {
@@ -104,85 +105,164 @@ function RegistrationPage() {
   }
   let skipEnabled = activeStep < 4
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-300 to-gray-500">
-      <div className="max-w-md w-full bg-white shadow-md rounded-lg p-8">
-        <Paper
-          square
-          elevation={0}
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            height: 50,
-            pl: 2,
-            bgcolor: 'background.default',
-          }}
-        >
-          <FormHeading>{heading}</FormHeading>
-        </Paper>
-        <SwipeableViews
-          axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-          index={activeStep}
-          onChangeIndex={handleStepChange}
-        >
-          <div>
-            {Math.abs(activeStep - 0) <= 5 ? <Step1 userData={userData.step1} handleNext={handleStepOneNext} /> : null}
-          </div>
-          <div>
-            {Math.abs(activeStep - 1) <= 5 ? <Step2 handleNext={handleNext} /> : null}
-          </div>
-          <div>
-            {Math.abs(activeStep - 2) <= 5 ? <Step3 handleNext={handleStepThreeNext} userData={userData.step3} /> : null}
-          </div>
-          <div>
-            {Math.abs(activeStep - 3) <= 5 ? <Step4 handleNext={handleStepFoureNext} userData={userData.step4} /> : null}
-          </div>
-          <div>
-            {Math.abs(activeStep - 4) <= 5 ? <Step5 handleNext={handleStepFiveNext} userData={userData.step5} /> : null}
-          </div>
-          <div>
-            {Math.abs(activeStep - 5) <= 5 ? <Step6 handleNext={handleStepFoureNext} userData={userData.step4} /> : null}
-          </div>
-        </SwipeableViews>
-        <div className='mb-5'>
-          <MobileStepper
-            steps={maxSteps}
-            position="static"
-            activeStep={activeStep}
-            nextButton={
-              <Button
-                size="small"
-                onClick={handleSkip}
-                disabled={skipEnabled}
-                sx={{ color: '#6366F1' }}
-              >
-                {activeStep <= 4 ? "Skip" : "Skip and Submit"}
-              </Button>
-            }
-            backButton={
-              <Button size="small" onClick={handleBack} disabled={activeStep === 0}
-                sx={{ color: '#6366F1' }}>
-                Back
-              </Button>
-            }
-            sx={{
-              '& .MuiMobileStepper-dot': {
-                backgroundColor: '#E0E7FF', // Lighter tone for inactive dots
-              },
-              '& .MuiMobileStepper-dotActive': {
-                backgroundColor: '#6366F1', // Lighter tone for active dot
-              },
-            }}
-          />
-        </div>
+            <div className="flex h-screen">
+                <div className="hidden lg:flex items-center justify-center flex-1 bg-white text-black">
+                    <div className="max-w-md text-center">
+                        <Logo />
+                    </div>
+                </div>
+                <div className="w-full bg-gray-100 lg:w-1/2 flex items-center justify-center">
+                    <div className="max-w-md w-full p-6 bg-white">
+                      <Paper
+                        square
+                        elevation={0}
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          height: 50,
+                          pl: 2,
+                          bgcolor: 'background.default',
+                        }}
+                      >
+                        <FormHeading>{heading}</FormHeading>
+                      </Paper>
+                      <SwipeableViews
+                        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                        index={activeStep}
+                        onChangeIndex={handleStepChange}
+                      >
+                        <div>
+                          {Math.abs(activeStep - 0) <= 5 ? <Step1 userData={userData.step1} handleNext={handleStepOneNext} /> : null}
+                        </div>
+                        <div>
+                          {Math.abs(activeStep - 1) <= 5 ? <Step2 handleNext={handleNext} /> : null}
+                        </div>
+                        <div>
+                          {Math.abs(activeStep - 2) <= 5 ? <Step3 handleNext={handleStepThreeNext} userData={userData.step3} /> : null}
+                        </div>
+                        <div>
+                          {Math.abs(activeStep - 3) <= 5 ? <Step4 handleNext={handleStepFoureNext} userData={userData.step4} /> : null}
+                        </div>
+                        <div>
+                          {Math.abs(activeStep - 4) <= 5 ? <Step5 handleNext={handleStepFiveNext} userData={userData.step5} /> : null}
+                        </div>
+                        <div>
+                          {Math.abs(activeStep - 5) <= 5 ? <Step6 handleNext={handleStepFoureNext} userData={userData.step4} /> : null}
+                        </div>
+                      </SwipeableViews>
+                      <div className='mb-5'>
+                        <MobileStepper
+                          steps={maxSteps}
+                          position="static"
+                          activeStep={activeStep}
+                          nextButton={
+                            <Button
+                              size="small"
+                              onClick={handleSkip}
+                              disabled={skipEnabled}
+                              sx={{ color: '#6366F1' }}
+                            >
+                              {activeStep <= 4 ? "Skip" : "Skip and Submit"}
+                            </Button>
+                          }
+                          backButton={
+                            <Button size="small" onClick={handleBack} disabled={activeStep === 0}
+                              sx={{ color: '#6366F1' }}>
+                              Back
+                            </Button>
+                          }
+                          sx={{
+                            '& .MuiMobileStepper-dot': {
+                              backgroundColor: '#E0E7FF', // Lighter tone for inactive dots
+                            },
+                            '& .MuiMobileStepper-dotActive': {
+                              backgroundColor: '#6366F1', // Lighter tone for active dot
+                            },
+                          }}
+                        />
+                      </div>
+                    </div>
+                </div>
+            </div>
+    // <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-300 to-gray-500">
+    //   <div className="max-w-md w-full bg-white shadow-md rounded-lg p-8">
+    //     <Paper
+    //       square
+    //       elevation={0}
+    //       sx={{
+    //         display: 'flex',
+    //         alignItems: 'center',
+    //         height: 50,
+    //         pl: 2,
+    //         bgcolor: 'background.default',
+    //       }}
+    //     >
+    //       <FormHeading>{heading}</FormHeading>
+    //     </Paper>
+    //     <SwipeableViews
+    //       axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+    //       index={activeStep}
+    //       onChangeIndex={handleStepChange}
+    //     >
+    //       <div>
+    //         {Math.abs(activeStep - 0) <= 5 ? <Step1 userData={userData.step1} handleNext={handleStepOneNext} /> : null}
+    //       </div>
+    //       <div>
+    //         {Math.abs(activeStep - 1) <= 5 ? <Step2 handleNext={handleNext} /> : null}
+    //       </div>
+    //       <div>
+    //         {Math.abs(activeStep - 2) <= 5 ? <Step3 handleNext={handleStepThreeNext} userData={userData.step3} /> : null}
+    //       </div>
+    //       <div>
+    //         {Math.abs(activeStep - 3) <= 5 ? <Step4 handleNext={handleStepFoureNext} userData={userData.step4} /> : null}
+    //       </div>
+    //       <div>
+    //         {Math.abs(activeStep - 4) <= 5 ? <Step5 handleNext={handleStepFiveNext} userData={userData.step5} /> : null}
+    //       </div>
+    //       <div>
+    //         {Math.abs(activeStep - 5) <= 5 ? <Step6 handleNext={handleStepFoureNext} userData={userData.step4} /> : null}
+    //       </div>
+    //     </SwipeableViews>
+    //     <div className='mb-5'>
+    //       <MobileStepper
+    //         steps={maxSteps}
+    //         position="static"
+    //         activeStep={activeStep}
+    //         nextButton={
+    //           <Button
+    //             size="small"
+    //             onClick={handleSkip}
+    //             disabled={skipEnabled}
+    //             sx={{ color: '#6366F1' }}
+    //           >
+    //             {activeStep <= 4 ? "Skip" : "Skip and Submit"}
+    //           </Button>
+    //         }
+    //         backButton={
+    //           <Button size="small" onClick={handleBack} disabled={activeStep === 0}
+    //             sx={{ color: '#6366F1' }}>
+    //             Back
+    //           </Button>
+    //         }
+    //         sx={{
+    //           '& .MuiMobileStepper-dot': {
+    //             backgroundColor: '#E0E7FF', // Lighter tone for inactive dots
+    //           },
+    //           '& .MuiMobileStepper-dotActive': {
+    //             backgroundColor: '#6366F1', // Lighter tone for active dot
+    //           },
+    //         }}
+    //       />
+    //     </div>
 
-        <div className="flex items-center justify-center align-middle">
-          <div className="text-sm">
-            Already have an account?
-            <Link to="/login" className="ml-1 font-medium text-indigo-600 hover:text-indigo-500 hover:underline">Log in</Link>
-          </div>
-        </div>
-      </div>
-    </div>
+    //     <div className="flex items-center justify-center align-middle">
+    //       <div className="text-sm">
+    //         Already have an account?
+    //         <Link to="/login" className="ml-1 font-medium text-indigo-600 hover:text-indigo-500 hover:underline">Log in</Link>
+    //       </div>
+    //     </div>
+    //   </div>
+    // </div>
   );
 }
 

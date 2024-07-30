@@ -6,6 +6,9 @@ import { AuthContext } from '../utils/AuthContext.jsx';
 import FormField from "../components/base/FormField.jsx";
 import Button from "../components/base/Button.jsx";
 import FormHeading from "../components/base/FormHeading.jsx";
+import Logo from '../components/base/Logo.jsx';
+import TextField from '@mui/material/TextField';
+
 
 const isEmailInvalid = (edited, email) => {
     return edited && !(email.includes('@'));
@@ -70,49 +73,57 @@ export default function LoginPage() {
     return (
         <>
             <main>
-                <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-300 to-gray-500">
-                    <div className="max-w-md w-full bg-white shadow-md rounded-lg p-8">
-                        <FormHeading>Login to Your Account</FormHeading>
-                        {authError && <Alert severity="error"> {authError.message} </Alert> }
+                <div className="flex h-screen">
+                    <div className="hidden lg:flex items-center justify-center flex-1 bg-white text-black">
+                        <div className="max-w-md text-center">
+                            <Logo />
+                        </div>
+                    </div>
+                    <div className="w-full bg-gray-100 lg:w-1/2 flex items-center justify-center">
+                        <div className="max-w-md w-full p-6 bg-white">
+                            <FormHeading className="text-indigo">Login to Your Account</FormHeading>
                         <form onSubmit={handleSubmit} className="space-y-6">
-                            <FormField
-                                htmlFor="email"
-                                labelText="Email"
-                                id="email"
-                                type="email"
-                                name="email"
-                                isInvalid={emailInValid}
-                                value={formValues.email}
-                                errorMessage="Please Enter a valid email."
-                                handleBlur={() => handleInputBlur('email')}
-                                handleChange={(event) => handleInputChange('email', event.target.value)}
-                            />
-                            <FormField
-                                htmlFor="password"
-                                labelText="Password"
-                                id="password"
-                                type="password"
-                                name="password"
-                                isInvalid={passwordInValid}
-                                value={formValues.password}
-                                errorMessage="Please Enter a valid password."
-                                handleBlur={() => handleInputBlur('password')}
-                                handleChange={(event) => handleInputChange('password', event.target.value)}
-                            />
-                            <div className="flex items-center justify-between">
-                                <div className="text-sm">
-                                    Don't have an account?
-                                    <Link to="/registration" className="ml-1 font-medium text-indigo-600 hover:text-indigo-500 hover:underline">Sign up</Link>
-                                </div>
+                            <div>
+                                <TextField
+                                    id="email"
+                                    label="Email"
+                                    type="email"
+                                    name="email"
+                                    className="mt-1 px-3 py-2 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm"                            
+                                    error={emailInValid}
+                                    helperText={emailInValid ? 'Please enter a valid email' : ""}
+                                    value={formValues.email}
+                                    onBlur={() => handleInputBlur('email')}
+                                    onChange={(event) => handleInputChange('email', event.target.value)}
+                                />
                             </div>
                             <div>
-                                <Button type="submit" stlyeClasses="w-full" handleClick={handleSubmit}>
-                                    Sign in
-                                </Button>
+                                <TextField
+                                    id="password"
+                                    label="Password"
+                                    type="password"
+                                    name="password"
+                                    className="mt-1 px-3 py-2 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm"
+                                    error={passwordInValid}
+                                    helperText={passwordInValid ? 'Please enter a valid password' : ""}
+                                    value={formValues.password}
+                                    onBlur={() => handleInputBlur('password')}
+                                    onChange={(event) => handleInputChange('password', event.target.value)}
+                                />
+                            </div>
+                            <div>
+                                <button type="submit" className="w-full bg-black text-white p-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    Log In
+                                </button>
                             </div>
                         </form>
+                        <div className="mt-4 text-sm text-gray-600 text-center ">
+                            <p>Don't have an account? <Link to="/registration" className="ml-1 font-medium text-indigo-600 hover:text-indigo-500 hover:underline">Sign Up</Link>
+                            </p>
+                        </div>
+                        </div>
                     </div>
-                </div>
+                </div>  
             </main>
         </>
     )
