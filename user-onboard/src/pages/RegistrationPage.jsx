@@ -12,6 +12,7 @@ import Step4 from '../components/formsteps/Step-4';
 import Step5 from '../components/formsteps/Step-5';
 import Step6 from '../components/formsteps/Step-6';
 import FormHeading from '../components/base/FormHeading';
+import { sendOtp, validateOtp } from '../HttpClient';
 import Logo from '../components/base/Logo';
 
 const initialUserState = {
@@ -19,6 +20,10 @@ const initialUserState = {
     email: "",
     password: "",
     confirmPassword: ""
+  },
+  step2: {
+    otpSent: false,
+    isValidated: false
   },
   step3: {
     dob: "",
@@ -47,6 +52,7 @@ function RegistrationPage() {
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
   const [userData, setUserData] = React.useState(initialUserState);
+  const [loading, setLoading] = React.useState(false);
   const maxSteps = 6;
 
   const handleNext = () => {
@@ -57,8 +63,33 @@ function RegistrationPage() {
     //perform some functions
     handleNext();
   }
-  const handleStepOneNext = (formData) => {
-    // calll api
+  const handleStepOneNext = async (formData) => {
+    console.log(formData)
+    setLoading(true)
+    await sendOtp({ email: formData.email });
+    setUserData(prevData => ({
+      ...prevData,
+      step1: formData,
+      step2: {
+        ...prevData,
+        sendOtp: true
+      }
+    }))
+    setLoading(false)
+    handleNext();
+  }
+
+  const verifyOtp = async (otp) => {
+    setLoading(true);
+    await validateOtp({ email: userData.step1.email, otp: otp });
+    setUserData(prevValue => ({
+      ...prevValue,
+      step2: {
+        ...prevValue.step2,
+        isValidated: true
+      }
+    }))
+    setLoading(false);
     handleNext();
   }
   const handleStepThreeNext = (formData) => {

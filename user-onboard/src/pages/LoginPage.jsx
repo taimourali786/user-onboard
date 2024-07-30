@@ -61,9 +61,10 @@ export default function LoginPage() {
             || isPasswordInvalid(formValuesEdited.password, formValues.password)) {
             return;
         }
-
+        setLoading(true);
         await login(formValues);
         if (isAuthenticated) {
+            setLoading(false);
             navigate("/");
             setFormValues({ email: '', password: '' });
             setFormValuesEdited({ email: false, password: false });
