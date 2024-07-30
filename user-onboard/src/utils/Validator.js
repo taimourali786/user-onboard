@@ -1,6 +1,13 @@
+export function validateEmail(email){
+    return email.includes("@");
+}
+export function validatePassword(password){
+    return password.length >= 8;
+}
+
 export function validateStep1(step1Data) {
-    let isEmailValid = step1Data.email.includes("@");
-    let passwordLength = step1Data.password.length >= 8;
+    let isEmailValid = validateEmail(step1Data.email);
+    let passwordLength = validatePassword(step1Data.password);
     let passwordsMatch = step1Data.password === step1Data.confirmPassword
         && step1Data.password !== "" && step1Data.confirmPassword !== "";
     let error = {
