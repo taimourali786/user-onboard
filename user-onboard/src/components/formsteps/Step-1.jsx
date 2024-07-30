@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { Button, Box, Typography, Snackbar, Alert } from '@mui/material';
+import { Button, Box, Snackbar, Alert, TextField } from '@mui/material';
 import { validateStep1 } from '../../utils/Validator.js';
-import FormField from './../base/FormField.jsx';
 import { styled } from '@mui/material/styles';
 
 const initialError = {
@@ -60,58 +59,52 @@ const Step1 = ({ userData, handleNext }) => {
   const nextEnabled = formData.email !== '' && formData.password !== '' && formData.confirmPassword !== '';
 
   return (
-    <Box display="flex" flexDirection="column" height="100%">
+    <div>
+    <div>
+      <header className="mb-4">
+          <h1 className="text-2xl font-bold mb-1">Create Your Free Account</h1>
+          <p className="text-[15px] text-slate-500">Enter your email and create a password to get started. We'll guide you through the rest of the process.</p>
+      </header>
+    </div>
+    <Box display="flex" flexDirection="column" height="100%" justifyContent="space-between">
       <Box component="form" flex="1" display="flex" flexDirection="column" justifyContent="center" p={2} className="space-y-6">
-        {/* <div>
-          {(!error.emailValid || !error.passwordLength || !error.passwordsMatch) && (
-            <Alert severity="error">{error.message}</Alert>
-          )}
-        </div> */}
-        <FormField
-          htmlFor="email"
-          labelText="Email"
+        <TextField
+          label="Email"
           id="email"
           type="email"
           name="email"
-          isInvalid={!error.emailValid}
+          error={!error.emailValid}
+          helperText={!error.emailValid ? "Enter a valid Email" : ""}
+          className="mt-1 px-3 py-2 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm"
           value={formData.email}
-          errorMessage="Enter a valid Email"
-          handleChange={event => handleChange("email", event.target.value)}
-          errorStyle={{ borderColor: 'red' }}
-          errorCaptionStyle={{ color: 'red', height: '20px', visibility: error.emailValid ? 'hidden' : 'visible' }}
+          onChange={event => handleChange("email", event.target.value)}
         />
-        <FormField
-          htmlFor="password"
-          labelText="Password"
+        <TextField
+          label="Password"
           id="password"
           type="password"
-          isInvalid={!error.passwordLength}
-          errorMessage="Password must be 8 characters"
+          error={!error.passwordLength}
+          helperText={!error.passwordLength ? "Password must be 8 characters" : ""}
           value={formData.password}
-          handleChange={event => handleChange("password", event.target.value)}
-          errorStyle={{ borderColor: 'red' }}
-          errorCaptionStyle={{ color: 'red', height: '20px', visibility: error.passwordLength ? 'hidden' : 'visible' }}
+          onChange={event => handleChange("password", event.target.value)}
+          className="mt-1 px-3 py-2 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm"
         />
-        {/* <Typography variant='caption' style={{ marginTop: '5px', height: '20px' }} className="text-sm text-gray-500 mt-1">Password must be at least 8 characters</Typography> */}
-        <FormField
-          labelText="Confirm Password"
+        <TextField
+          label="Confirm Password"
+          id="confirmPassword"
           type="password"
-          isInvalid={!error.passwordsMatch}
-          errorMessage="Password does not match"
+          error={!error.passwordsMatch}
+          helperText={!error.passwordsMatch ? "Password does not match" : ""}
           value={formData.confirmPassword}
-          handleChange={event => handleChange("confirmPassword", event.target.value)}
-          errorStyle={{ borderColor: 'red' }}
-          errorCaptionStyle={{ color: 'red', height: '20px', visibility: error.passwordsMatch ? 'hidden' : 'visible' }}
+          onChange={event => handleChange("confirmPassword", event.target.value)}
+          className="mt-1 px-3 py-2 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm"
         />
       </Box>
-      <Box display="flex" justifyContent="flex-end" p={2}>
-        <CustomButton
-          variant="contained"
-          onClick={onNextClick}
-          disabled={!nextEnabled}
-        >
-          Next
-        </CustomButton>
+      <Box display="flex" justifyContent="flex-end" p={2} alignItems="flex-end">
+        <button type="submit" onClick={onNextClick} disabled={!nextEnabled}
+          className="inline-flex justify-center whitespace-nowrap rounded-lg bg-indigo-500 px-3.5 py-2.5 text-sm font-medium text-white shadow-sm shadow-indigo-950/10 hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-300 focus-visible:outline-none focus-visible:ring focus-visible:ring-indigo-300 transition-colors duration-150">
+            Proceed
+        </button>
       </Box>
       <Snackbar
         open={snackbarOpen}
@@ -124,6 +117,7 @@ const Step1 = ({ userData, handleNext }) => {
         </Alert>
       </Snackbar>
     </Box>
+    </div>
   );
 };
 
