@@ -1,5 +1,5 @@
 export default function FormHeading({ ...props }){
     return (
-        <h2 className="text-2xl font-bold text-center mb-6 text-gray-700">{props.children}</h2>
+        <h2 className="text-2xl font-bold text-center mb-6 text-indigo-600">{props.children}</h2>
     )
 }

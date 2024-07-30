@@ -35,10 +35,11 @@ const Step6 = ({ userData, handleNext }) => {
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
-        if (file) {
+        if (file && file.size <= 10485760) { // 10MB limit
             setSelectedFile(file);
-            const objectUrl = URL.createObjectURL(file);
-            setPreviewUrl(objectUrl);
+            setPreviewUrl(URL.createObjectURL(file));
+        } else {
+            alert('File is too large or invalid type.');
         }
     };
     const handleUpload = () => {
@@ -52,51 +53,33 @@ const Step6 = ({ userData, handleNext }) => {
     const nextEnabled = formData.cardNumber !== "" && formData.expiry !== "" && formData.cvv !== ""
         && formData.name !== "" && formData.address !== "";
     return (
-        <Box component="form" noValidate autoComplete="off" sx={{ p: 2 }}>
-            <Box mt={2}>
-                <Typography>Upload Profile Picture</Typography>
-                <Grid container spacing={2}>
-                    <Grid item xs={8}>
-                        <Input
-                            fullWidth
-                            type="file"
-                            accept="image/*"
-                            margin="normal"
-                            variant="outlined"
-                            onChange={handleFileChange}
-                        // error={!error.cardValid}
-                        // helperText={!error.cardValid ? "Invalid Card" : ""}
-                        // onChange={event => handleChange("card", event.target.value)}
-                        // value={formData.cardNumber}
-                        />
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={handleUpload}
-                            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        >
-                            Upload
-                        </Button>
-                    </Grid>
-                </Grid>
-            </Box>
-            <Box className="mb-2">
-                <img src={previewUrl} alt="Selected" style={{ maxWidth: '300px', maxHeight: '300px' }} />
-            </Box>
-            <Box>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={onNextClick}
-                    disabled={!nextEnabled}
-                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                    Submit
-                </Button>
-            </Box >
+        <div style={{ marginTop: '20px' }}>
+        <header className="mb-4">
+          <h1 className="text-2xl font-bold mb-1">Upload Profile Picture</h1>
+          <p className="text-[15px] text-slate-500">Please upload an image of yourself for profile purposes.</p>
+      </header>
+        <Box className="w-[400px] relative border-2 border-gray-300 border-dashed rounded-lg p-6" id="dropzone">
+            <input type="file" accept="image/*" className="absolute inset-0 w-full h-full opacity-0 z-50" onChange={handleFileChange} />
+            <div className="text-center">
+                <img className="mx-auto h-12 w-12" src="/src/assets/image-upload.svg" alt="Upload Icon" />
+                <h3 className="mt-2 text-sm font-medium text-gray-900">
+                <label className="relative cursor-pointer">
+                    <span>Drag and drop </span>
+                    <span className="text-indigo-600"> or browse </span>
+                    <span>to upload</span>
+                </label>
+            </h3>
+            <p className="mt-1 text-xs text-gray-500">
+                PNG, JPG, GIF up to 10MB
+            </p>
+            </div>
+            {previewUrl && <img src={previewUrl} className="mt-4 mx-auto max-h-40" alt="Preview" />}
         </Box>
+        <Button variant="contained" color="primary" onClick={onNextClick} disabled={!formData.cardNumber || !formData.expiry || !formData.cvv || !formData.name || !formData.address}>
+            Submit
+        </Button>
+
+    </div>
     );
 }
 
