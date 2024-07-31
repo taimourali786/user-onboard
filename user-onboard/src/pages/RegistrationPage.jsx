@@ -42,9 +42,7 @@ const initialUserState = {
   step5: {
     cardNumber: "",
     expiry: "",
-    cvv: "",
     name: "",
-    address: ""
   },
   step6: {}
 }

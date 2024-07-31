@@ -60,7 +60,7 @@ const Step1 = ({ userData, handleNext }) => {
 
   return (
     <div>
-    <div>
+    <div className="max-w-md mx-auto text-center bg-white px-4">
       <header className="mb-4">
           <h1 className="text-2xl font-bold mb-1">Create Your Free Account</h1>
           <p className="text-[15px] text-slate-500">Enter your email and create a password to get started. We'll guide you through the rest of the process.</p>
@@ -102,7 +102,11 @@ const Step1 = ({ userData, handleNext }) => {
       </Box>
       <Box display="flex" justifyContent="flex-end" p={2} alignItems="flex-end">
         <button type="submit" onClick={onNextClick} disabled={!nextEnabled}
-          className="inline-flex justify-center whitespace-nowrap rounded-lg bg-indigo-500 px-3.5 py-2.5 text-sm font-medium text-white shadow-sm shadow-indigo-950/10 hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-300 focus-visible:outline-none focus-visible:ring focus-visible:ring-indigo-300 transition-colors duration-150">
+          className={`inline-flex justify-center whitespace-nowrap rounded-lg px-3.5 py-2.5 text-sm font-medium text-white shadow-sm shadow-indigo-950/10 focus:outline-none focus:ring focus:ring-indigo-300 focus-visible:outline-none focus-visible:ring focus-visible:ring-indigo-300 transition-colors duration-150 ${
+            nextEnabled 
+              ? 'bg-indigo-500 hover:bg-indigo-600' 
+              : 'bg-indigo-300 cursor-not-allowed'
+          }`}>
             Proceed
         </button>
       </Box>
