@@ -39,15 +39,11 @@ export function validateStep3(step3Data) {
 export function validateStep5(step5Data){
     let cardValid = step5Data.cardNumber !== "" && step5Data.cardNumber.length === 16;
     let expiryValid = step5Data.expiry !== "" && step5Data.expiry.match(/(\b([0-9]|1[01])\\\d+\b)/g);
-    let cvvValid = step5Data.cvv !== "" && step5Data.cvv.length === 3
     let nameValid = step5Data.name !== "";
-    let addressValid = step5Data.address !== "";
     const error = {
         cardValid: cardValid,
         expiryValid: expiryValid,
-        cvvValid: cvvValid,
         nameValid: nameValid,
-        addressValid: addressValid,
         message: "Invalid Card Details"
     }
     return error;

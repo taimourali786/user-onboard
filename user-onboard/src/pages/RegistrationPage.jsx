@@ -42,9 +42,7 @@ const initialUserState = {
   step5: {
     cardNumber: "",
     expiry: "",
-    cvv: "",
     name: "",
-    address: ""
   },
   step6: {}
 }
@@ -193,7 +191,7 @@ function RegistrationPage() {
                     disabled={skipEnabled}
                     sx={{ color: '#6366F1' }}
                   >
-                    {activeStep <= 4 ? "Skip" : "Skip and Submit"}
+                    {activeStep <= 4 ? "Skip" : "Skip & Submit"}
                   </Button>
                 }
                 backButton={
