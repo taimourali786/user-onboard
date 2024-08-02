@@ -40,14 +40,14 @@ const Step5 = ({ userData, handleNext }) => {
             <div className="bg-gradient-to-r from-indigo-300 via-indigo-400 to-indigo-500 rounded-lg overflow-hidden shadow-lg">
                 <div className="px-6 py-4">
                     <div className="flex justify-between items-center">
-                        <img className="h-8" src="https://www.svgrepo.com/show/499847/company.svg" alt="Workflow logo"/>
+                        <img className="h-8" src="/src/assets/company.svg" alt="Workflow logo"/>
                         <span className="font-medium text-gray-600">05/24</span>
                     </div>
                     <div className="mt-4">
                         <div className="font-bold text-gray-800 text-xl">**** **** **** 1234</div>
                         <div className="flex justify-between items-center mt-2">
                             <div className="text-sm text-gray-600">Card Holder Name</div>
-                            <img className="h-10 w-10" src="https://www.svgrepo.com/show/362011/mastercard.svg" alt="Mastercard logo"/>
+                            <img className="h-10 w-10" src="/src/assets/mastercard.svg" alt="Mastercard logo"/>
                         </div>
                     </div>
                 </div>
