@@ -1,23 +1,15 @@
 import { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../utils/AuthContext.jsx';
+import { AuthContext } from '../context/AuthContext.jsx';
+import {  Snackbar, Alert, TextField } from '@mui/material';
 
 import FormHeading from "../components/base/FormHeading.jsx";
 import Logo from '../components/base/Logo.jsx';
-import TextField from '@mui/material/TextField';
 import { validateEmail, validatePassword } from '../utils/Validator.js';
-
-const isEmailInvalid = (edited, email) => {
-    return edited && !(email.includes('@'));
-};
-
-const isPasswordInvalid = (edited, password) => {
-    return edited && password.length < 8;
-};
 
 export default function LoginPage() {
 
-    const { login, authError, isAuthenticated } = useContext(AuthContext);
+    const { login, authError, setAuthError, isAuthenticated } = useContext(AuthContext);
     const [credentials, setCredentials] = useState({ email: '', password: '' });
     const [validCredentials, setValidCredentials] = useState({ email: true, password: true })
     const [loading, setLoading] = useState(false);
@@ -68,17 +60,27 @@ export default function LoginPage() {
             navigate("/");
         }
     };
-    
+
     useEffect(() => {
-        if (isAuthenticated) {  
+        if (isAuthenticated) {
             setLoading(false);
             navigate("/");
         }
-    }, [isAuthenticated]);  
-    
+    }, [isAuthenticated]);
+
     return (
         <>
             <main className="flex min-h-screen">
+                <Snackbar
+                    open={authError !== null}
+                    autoHideDuration={2000}
+                    onClose={() => setAuthError(null)}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                >
+                    <Alert onClose={() => setAuthError(null)} severity="error" sx={{ width: '300px' }}>
+                        Failed to login
+                    </Alert>
+                </Snackbar>
                 <div className="hidden lg:flex items-center justify-center flex-1 bg-white text-black">
                     <div className="max-w-md text-center">
                         <Logo />
@@ -126,7 +128,7 @@ export default function LoginPage() {
                             <p>Don't have an account? <Link to="/registration" className="ml-1 font-medium text-indigo-600 hover:text-indigo-500 hover:underline">Sign Up</Link></p>
                         </div>
                     </div>
-                </div>  
+                </div>
             </main>
         </>
     )

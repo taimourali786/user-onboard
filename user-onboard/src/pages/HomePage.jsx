@@ -4,7 +4,7 @@ import Button from "../components/base/Button.jsx";
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 
-import { AuthContext } from '../utils/AuthContext.jsx';
+import { AuthContext } from '../context/AuthContext.jsx';
 import Step1 from "../components/formsteps/Step-1.jsx";
 const initialUser = {
     email: "abc@gmail.com",
