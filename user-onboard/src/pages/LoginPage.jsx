@@ -126,7 +126,7 @@ export default function LoginPage() {
                             <p>Don't have an account? <Link to="/registration" className="ml-1 font-medium text-indigo-600 hover:text-indigo-500 hover:underline">Sign Up</Link></p>
                         </div>
                     </div>
-                </div>
+                </div>  
             </main>
         </>
     )
