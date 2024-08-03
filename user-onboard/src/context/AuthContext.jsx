@@ -1,9 +1,10 @@
 import { createContext, useState, useEffect } from 'react';
-import { performLogin } from '../HttpClient';
+import { useHttpClient } from '../HttpClient';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+    const { performLogin } = useHttpClient();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [authError, setAuthError] = useState(null);
 
@@ -17,7 +18,6 @@ export const AuthProvider = ({ children }) => {
     const login = async (credentials) => {
         const token = await performLogin(credentials);
         if (token !== null) {
-            localStorage.setItem('authorization', token);
             setIsAuthenticated(true);
             setAuthError(null);
         } else{

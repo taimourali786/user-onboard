@@ -8,7 +8,6 @@ import Logo from '../components/base/Logo.jsx';
 import { validateEmail, validatePassword } from '../utils/Validator.js';
 
 export default function LoginPage() {
-
     const { login, authError, setAuthError, isAuthenticated } = useContext(AuthContext);
     const [credentials, setCredentials] = useState({ email: '', password: '' });
     const [validCredentials, setValidCredentials] = useState({ email: true, password: true })
@@ -71,16 +70,6 @@ export default function LoginPage() {
     return (
         <>
             <main className="flex min-h-screen">
-                <Snackbar
-                    open={authError !== null}
-                    autoHideDuration={2000}
-                    onClose={() => setAuthError(null)}
-                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                >
-                    <Alert onClose={() => setAuthError(null)} severity="error" sx={{ width: '300px' }}>
-                        Failed to login
-                    </Alert>
-                </Snackbar>
                 <div className="hidden lg:flex items-center justify-center flex-1 bg-white text-black">
                     <div className="max-w-md text-center">
                         <Logo />

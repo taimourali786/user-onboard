@@ -36,7 +36,7 @@ const CustomButton = styled(Button)(({ theme }) => ({
 const Step1 = ({ userData, handleNext }) => {
   const [formData, setFormData] = useState(userData);
   const [error, setError] = useState(initialError);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  // const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const onNextClick = () => {
     const error = validateStep1(formData);
@@ -110,16 +110,6 @@ const Step1 = ({ userData, handleNext }) => {
             Proceed
         </button>
       </Box>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={1000}
-        onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert onClose={() => setSnackbarOpen(false)} severity="error" sx={{ width: '300px' }}>
-          {error.message}
-        </Alert>
-      </Snackbar>
     </Box>
     </div>
   );

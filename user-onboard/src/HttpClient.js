@@ -1,87 +1,96 @@
-import { LOGIN, SEND_OTP, VALIDATE_OTP } from "./ApiUrl";
+import { LOGIN, REGISTRAtION_1, SEND_OTP, VALIDATE_OTP } from "./ApiUrl";
 
-export const performGet = async (url, queryParams = {}) => {
-    const queryString = new URLSearchParams(queryParams).toString();
-    const fullUrl = queryString ? `${url}?${queryString}` : url;
 
-    try {
-        const token = getToken();
-        const response = await fetch(fullUrl, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token
-            },
-        });
+import { useError } from './context/ErrorContext';
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+export const useHttpClient = () => {
+    const { handleError } = useError();
+
+    const performGet = async (url, queryParams = {}) => {
+        const queryString = new URLSearchParams(queryParams).toString();
+        const fullUrl = queryString ? `${url}?${queryString}` : url;
+
+        try {
+            const token = getToken();
+            const response = await fetch(fullUrl, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token,
+                },
+            });
+
+            if (!response.ok) {
+                const msg = await getErrorMessage(response);
+                handleError(msg);
+                throw new Error(`Request Failed: ${response.status} \n ${msg} `);
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            handleError(error.message);
+            throw error;
         }
+    };
 
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        throw error; // Rethrow the error for further handling if needed
-    }
-}
+    const performPost = async (url, body = {}) => {
+        try {
+            const token = getToken();
+            const response = await fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(body),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token,
+                },
+            });
 
-export const performPost = async (url, body = {}) => {
+            if (!response.ok) {
+                const msg = await getErrorMessage(response);
+                handleError(msg);
+                throw new Error(`Request Failed: ${response.status} \n ${msg} `);
+            }
 
-    try {
-        const token = getToken();
-        const response = await fetch(url, {
-            method: 'POST',
-            body: JSON.stringify(body),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            return response;
+        } catch (error) {
+            handleError(error.message);
+            throw error;
         }
-
-        return response;
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        throw error; // Rethrow the error for further handling if needed
-    }
-}
-
-export const performLogin = async (body) => {
-    try{
+    };
+    const performLogin = async (body) => {
         const tokenJson = await performPost(LOGIN, body)
-        .then(async response => await response.json());
-        const token = tokenJson.token;
-        // setToken(token);
+            .then(async response => await response.json());
+        const token = tokenJson.responseContent.token;
+        localStorage.setItem('authorization', token);
         return token;
-    } catch(error){
-        return null;
     }
-}
 
-export const sendOtp = async (body) => {
-    try{
+    const performRegistration1 = async (body) => {
+        const tokenJson = await performPost(REGISTRAtION_1, body)
+            .then(async response => await response.json());
+        const token = tokenJson.responseContent.token;
+        localStorage.setItem('authorization', token);
+        return token;
+    }
+
+    const sendOtp = async (body) => {
         await performPost(SEND_OTP, body);
         return true
-    } catch(error){
-        return false;
     }
-} 
-
-export const validateOtp = async (body) => {
-    try{
+    const validateOtp = async (body) => {
         await performPost(VALIDATE_OTP, body);
         return true
-    } catch(error){
-        return false;
     }
-} 
 
+    return { performGet, performPost, sendOtp, performLogin, performRegistration1, validateOtp };
+};
 
 const getToken = () => {
-    const token = localStorage.getItem("authorization");
-    return token;
+    const token = localStorage.getItem('authorization');
+    return "Bearer " + token;
+};
+
+const getErrorMessage = async response => {
+    return response.json().then(json => json.responseMessage);
 }
