@@ -134,14 +134,14 @@ function RegistrationPage() {
   }
   let skipEnabled = activeStep < 4
   return (
-      <div className="flex h-screen">
+      <div className="flex min-h-screen">
       <div className="hidden lg:flex items-center justify-center flex-1 bg-white text-black">
           <div className="max-w-md text-center">
               <Logo />
           </div>
       </div>
-      <div className="w-full bg-gray-100 lg:w-1/2 flex items-center justify-center">
-          <div className="max-w-md w-full p-6 bg-white">
+      <div className="flex-1 flex items-center justify-center bg-gray-100 p-4">
+          <div className="max-w-lg w-full bg-white shadow-xl rounded-xl p-6">
             <Paper
               square
               elevation={0}
