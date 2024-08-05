@@ -55,7 +55,7 @@ const Step6 = ({ userData, handleNext }) => {
     const nextEnabled = formData.cardNumber !== "" && formData.expiry !== "" && formData.cvv !== ""
         && formData.name !== "" && formData.address !== "";
     return (
-        <div style={{ marginTop: '20px' }}>
+        <div className="max-w-md mx-auto text-center bg-white px-6">
         <header className="mb-4">
           <h1 className="text-2xl font-bold mb-1">Upload Profile Picture</h1>
           <p className="text-[15px] text-slate-500">Please upload an image of yourself for profile purposes.</p>
