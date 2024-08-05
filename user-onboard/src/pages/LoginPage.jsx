@@ -64,8 +64,8 @@ export default function LoginPage() {
             setLoading(false);
             navigate("/");
         }
-    }, [isAuthenticated]);
-
+    }, [isAuthenticated]);  
+    
     return (
         <>
             <main className="flex min-h-screen">
