@@ -1,34 +1,52 @@
 import { Box, FormGroup, FormControlLabel, Checkbox } from "@mui/material";
 import { useState } from "react";
 
-const Step4 = ({ userData, handleNext }) => {
-    const [preferences, setPreferences] = useState(userData);
+const Step4 = ({ userData, preferences, handleNext }) => {
+    const [userPreferences, setUserPreferences] = useState(userData);
 
-    const handleCheckChanged = (event) => {
-        setPreferences(prevValues => ({
+    console.log(userData);
+
+    const handleCheckChanged = (key, checked) => {
+        setUserPreferences(prevValues => ({
             ...prevValues,
-            [event.target.name]: event.target.checked
+            [key]: checked
         }));
     }
 
     const onNextClick = (event) => {
         event.preventDefault();
-        handleNext(preferences);
+        const list = [];
+        Object.values(preferences).map(v => {
+            
+            const obj = {preferenceId: v.preferenceId};
+
+            if(userPreferences[v.preferenceId] !== undefined ){
+                obj.preferenceValue = userPreferences[v.preferenceId];
+            } else{
+                obj.preferenceValue = false;
+            }
+            list.push(obj);
+        })
+        handleNext(list);
     }
 
-    let preferenceCheckboxes = Object.keys(preferences).map((prefKey) => (
-        <FormControlLabel
-            key={prefKey}
+    let preferenceCheckboxes = Object.keys(preferences).map(p => {
+        const pref = preferences[p];
+        return <FormControlLabel
+            key={pref.preferenceId}
+
             control={
-                <Checkbox 
-                    name={prefKey} 
-                    onChange={handleCheckChanged}
-                    checked={preferences[prefKey]}
+                <Checkbox
+                    key={pref.preferenceId}
+                    name={pref.preferenceName}
+                    onChange={event => handleCheckChanged(pref.preferenceId, event.target.checked)}
+                    checked={userPreferences[pref.preferenceId]}
                 />
             }
-            label={prefKey}
+            label={pref.preferenceName}
         />
-    ));
+    }
+    );
 
     return (
         <div>

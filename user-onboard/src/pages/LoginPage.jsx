@@ -1,14 +1,14 @@
 import { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext.jsx';
-import {  Snackbar, Alert, TextField } from '@mui/material';
+import { Snackbar, Alert, TextField } from '@mui/material';
 
 import FormHeading from "../components/base/FormHeading.jsx";
 import Logo from '../components/base/Logo.jsx';
 import { validateEmail, validatePassword } from '../utils/Validator.js';
 
 export default function LoginPage() {
-    const { login, authError, setAuthError, isAuthenticated } = useContext(AuthContext);
+    const { login, user, isAuthenticated } = useContext(AuthContext);
     const [credentials, setCredentials] = useState({ email: '', password: '' });
     const [validCredentials, setValidCredentials] = useState({ email: true, password: true })
     const [loading, setLoading] = useState(false);
@@ -55,7 +55,6 @@ export default function LoginPage() {
         setLoading(true);
         await login(credentials);
         if (isAuthenticated) {
-            setLoading(false);
             navigate("/");
         }
     };

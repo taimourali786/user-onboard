@@ -1,4 +1,4 @@
-import { LOGIN, REGISTRAtION_1, SEND_OTP, VALIDATE_OTP } from "./ApiUrl";
+import { GET_PREFERENCES, GET_USER, LOGIN, REGISTRAtION_1, SEND_OTP, VALIDATE_OTP, POST_PREFERENCES } from "./ApiUrl";
 
 
 import { useError } from './context/ErrorContext';
@@ -21,13 +21,10 @@ export const useHttpClient = () => {
             });
 
             if (!response.ok) {
-                const msg = await getErrorMessage(response);
-                handleError(msg);
-                throw new Error(`Request Failed: ${response.status} \n ${msg} `);
+                handleError(response);
+                // throw new Error(`Request Failed: ${response.status} \n ${msg} `);
             }
-
-            const data = await response.json();
-            return data;
+            return response;
         } catch (error) {
             handleError(error.message);
             throw error;
@@ -47,9 +44,8 @@ export const useHttpClient = () => {
             });
 
             if (!response.ok) {
-                const msg = await getErrorMessage(response);
-                handleError(msg);
-                throw new Error(`Request Failed: ${response.status} \n ${msg} `);
+                handleError(response);
+                throw new Error();
             }
 
             return response;
@@ -83,7 +79,34 @@ export const useHttpClient = () => {
         return true
     }
 
-    return { performGet, performPost, sendOtp, performLogin, performRegistration1, validateOtp };
+    const getUser = async () => {
+        const response = await performGet(GET_USER);
+        const json = await response.json();
+        return json.responseContent;
+    }
+
+    const getPreferences = async () => {
+        const response = await performGet(GET_PREFERENCES);
+        const json = await response.json();
+        return json.responseContent;
+    }
+
+    const postPreferences = async (body) => {
+        const response = await performPost(POST_PREFERENCES, body);
+        return true;
+    }
+
+    return {
+        performGet,
+        performPost,
+        sendOtp,
+        performLogin,
+        performRegistration1,
+        validateOtp,
+        getUser,
+        getPreferences,
+        postPreferences
+    };
 };
 
 const getToken = () => {
@@ -91,6 +114,4 @@ const getToken = () => {
     return "Bearer " + token;
 };
 
-const getErrorMessage = async response => {
-    return response.json().then(json => json.responseMessage);
-}
+

@@ -15,14 +15,15 @@ import FormHeading from '../components/base/FormHeading';
 import { useHttpClient } from '../HttpClient';
 import Logo from '../components/base/Logo';
 import { REGISTRAtION_2 } from '../ApiUrl';
-import { Fab } from '@mui/material';
+import { AuthContext } from '../context/AuthContext';
 
 const initialUserState = {
   step1: {
     email: "",
     password: "",
     confirmPassword: "",
-    completed: false
+    completed: false,
+    passwordDisabled: false
   },
   step2: {
     completed: false
@@ -34,13 +35,7 @@ const initialUserState = {
     city: "",
     country: ""
   },
-  step4: {
-    pref1: true,
-    pref2: false,
-    pref3: false,
-    pref4: true,
-    pref5: false
-  },
+  step4: {},
   step5: {
     cardNumber: "",
     expiry: "",
@@ -49,16 +44,42 @@ const initialUserState = {
   step6: {}
 }
 const otpExpiryTimeSeconds = 5;
+
+const buildInitialState = (user) => {
+  const state = initialUserState;
+  state.step1 = {
+    email: user.email,
+    password: "*",
+    confirmPassword: "*",
+    completed: true,
+    passwordDisabled: true
+  }
+  state.step2.completed = user.otpVerified || true; // FIXME: Make this false
+  state.step3 = {
+    address1: user.address.address1 || "",
+    address2: user.address.address2 || "",
+    city: user.address.city || "",
+    country: user.address.country || ""
+
+  }
+const prefList  = user.userPreferences;
+for(const pref of prefList){
+  state.step4[[pref.preferenceId]] = pref.preferenceValue
+}
+  return state;
+
+}
 function RegistrationPage() {
-  const { performRegistration1, sendOtp, validateOtp, performPost } = useHttpClient();
+  const { performRegistration1, sendOtp, validateOtp, performPost, getPreferences, postPreferences } = useHttpClient();
+  const { user, isAuthenticated } = React.useContext(AuthContext);
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
   const [userData, setUserData] = React.useState(initialUserState);
   const [loading, setLoading] = React.useState(false);
   const [timeLeft, setTimeLeft] = React.useState(0);
   const [otpExpired, setOtpExpired] = React.useState(true);
+  const [preferences, setPreferences] = React.useState({});
   const maxSteps = 6;
-
 
   React.useEffect(() => {
     if (timeLeft === 0) {
@@ -72,9 +93,32 @@ function RegistrationPage() {
     return () => clearInterval(intervalId);
   }, [timeLeft]);
 
+  React.useEffect(() => {
+    if (user !== null) {
+      setUserData(buildInitialState(user));
+    } else {
+      setUserData(initialUserState);
+    }
+  }, [user]);
+
+  React.useEffect(() => {
+    if(isAuthenticated){
+
+      fetchPref();
+    }
+  }, [isAuthenticated]);
+
+  const fetchPref = async () => {
+    const pref = await getPreferences();
+    setPreferences(pref);
+  }
 
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    if (activeStep === 0 && userData.step2.completed === true) {
+      setActiveStep((prevActiveStep) => prevActiveStep + 2);
+    } else {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    }
   };
 
   const handleSkip = () => {
@@ -92,7 +136,8 @@ function RegistrationPage() {
       }
       setUserData(prevData => ({
         ...prevData,
-        step1: {...formData,
+        step1: {
+          ...formData,
           completed: true
         }
       }))
@@ -136,7 +181,6 @@ function RegistrationPage() {
     }
   }
   const handleStepThreeNext = async (formData) => {
-    console.log(formData)
     setLoading(true);
     try {
       await performPost(REGISTRAtION_2, formData);
@@ -154,13 +198,15 @@ function RegistrationPage() {
     handleNext();
   }
 
-  const handleStepFoureNext = (formData) => {
-    // calll api
+  const handleStepFoureNext = async (formData) => {
+    setLoading(true);
+    await postPreferences(formData);
+    setLoading(false);
     handleNext();
   }
 
   const handleStepFiveNext = (formData) => {
-    // calll api
+    // call api
     handleNext();
   }
 
@@ -170,7 +216,11 @@ function RegistrationPage() {
   }
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    if (activeStep === 2 && userData.step2.completed === true) {
+      setActiveStep((prevActiveStep) => prevActiveStep - 2);
+    } else {
+      setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    }
   };
 
   const handleStepChange = (step) => {
@@ -234,13 +284,13 @@ function RegistrationPage() {
               {Math.abs(activeStep - 2) <= 5 ? <Step3 handleNext={handleStepThreeNext} userData={userData.step3} /> : null}
             </div>
             <div>
-              {Math.abs(activeStep - 3) <= 5 ? <Step4 handleNext={handleStepFoureNext} userData={userData.step4} /> : null}
+              {Math.abs(activeStep - 3) <= 5 ? <Step4 handleNext={handleStepFoureNext} userData={userData.step4} preferences={preferences} /> : null}
             </div>
             <div>
               {Math.abs(activeStep - 4) <= 5 ? <Step5 handleNext={handleStepFiveNext} userData={userData.step5} /> : null}
             </div>
             <div>
-              {Math.abs(activeStep - 5) <= 5 ? <Step6 handleNext={handleStepFoureNext} userData={userData.step4} /> : null}
+              {Math.abs(activeStep - 5) <= 5 ? <Step6 handleNext={handleStepFoureNext} userData={userData.step6} /> : null}
             </div>
           </SwipeableViews>
           <div className='mb-5'>
