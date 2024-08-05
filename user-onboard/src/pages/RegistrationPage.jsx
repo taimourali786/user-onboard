@@ -14,6 +14,8 @@ import Step6 from '../components/formsteps/Step-6';
 import FormHeading from '../components/base/FormHeading';
 import { sendOtp, validateOtp } from '../HttpClient';
 import Logo from '../components/base/Logo';
+import Spinner from '../components/base/Spinner'; // Import the Spinner component
+
 
 const initialUserState = {
   step1: {
@@ -54,61 +56,73 @@ function RegistrationPage() {
   const maxSteps = 6;
 
   const handleNext = () => {
+    setLoading(true);
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setLoading(false);
   };
 
   const handleSkip = () => {
     //perform some functions
     handleNext();
   }
+
   const handleStepOneNext = async (formData) => {
-    console.log(formData)
-    setLoading(true)
+    console.log(formData);
+    setLoading(true);
     await sendOtp({ email: formData.email });
-    setUserData(prevData => ({
+    setUserData((prevData) => ({
       ...prevData,
       step1: formData,
       step2: {
         ...prevData,
-        sendOtp: true
-      }
-    }))
-    setLoading(false)
+        sendOtp: true,
+      },
+    }));
+    setLoading(false);
     handleNext();
-  }
+  };
 
   const verifyOtp = async (otp) => {
     setLoading(true);
     await validateOtp({ email: userData.step1.email, otp: otp });
-    setUserData(prevValue => ({
+    setUserData((prevValue) => ({
       ...prevValue,
       step2: {
         ...prevValue.step2,
-        isValidated: true
-      }
-    }))
+        isValidated: true,
+      },
+    }));
     setLoading(false);
     handleNext();
-  }
+  };
+
   const handleStepThreeNext = (formData) => {
-    // calll api
+    setLoading(true);
+    // call api
+    setLoading(false);
     handleNext();
-  }
+  };
 
   const handleStepFoureNext = (formData) => {
-    // calll api
+    setLoading(true);
+    // call api
+    setLoading(false);
     handleNext();
-  }
+  };
 
   const handleStepFiveNext = (formData) => {
-    // calll api
+    setLoading(true);
+    // call api
+    setLoading(false);
     handleNext();
-  }
+  };
 
   const handleStepSixNext = (formData) => {
-    // calll api
-
-  }
+    setLoading(true);
+    // call api
+    setLoading(false);
+    handleNext();
+  };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -135,6 +149,7 @@ function RegistrationPage() {
   let skipEnabled = activeStep < 4
   return (
       <div className="flex min-h-screen">
+      <Spinner loading={loading} />
       <div className="hidden lg:flex items-center justify-center flex-1 bg-white text-black">
           <div className="max-w-md text-center">
               <Logo />
