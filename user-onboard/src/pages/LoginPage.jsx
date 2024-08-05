@@ -1,23 +1,14 @@
 import { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../utils/AuthContext.jsx';
+import { AuthContext } from '../context/AuthContext.jsx';
+import { Snackbar, Alert, TextField } from '@mui/material';
 
 import FormHeading from "../components/base/FormHeading.jsx";
 import Logo from '../components/base/Logo.jsx';
-import TextField from '@mui/material/TextField';
 import { validateEmail, validatePassword } from '../utils/Validator.js';
 
-const isEmailInvalid = (edited, email) => {
-    return edited && !(email.includes('@'));
-};
-
-const isPasswordInvalid = (edited, password) => {
-    return edited && password.length < 8;
-};
-
 export default function LoginPage() {
-
-    const { login, authError, isAuthenticated } = useContext(AuthContext);
+    const { login, user, isAuthenticated } = useContext(AuthContext);
     const [credentials, setCredentials] = useState({ email: '', password: '' });
     const [validCredentials, setValidCredentials] = useState({ email: true, password: true })
     const [loading, setLoading] = useState(false);
@@ -64,13 +55,12 @@ export default function LoginPage() {
         setLoading(true);
         await login(credentials);
         if (isAuthenticated) {
-            setLoading(false);
             navigate("/");
         }
     };
-    
+
     useEffect(() => {
-        if (isAuthenticated) {  
+        if (isAuthenticated) {
             setLoading(false);
             navigate("/");
         }
@@ -126,7 +116,7 @@ export default function LoginPage() {
                             <p>Don't have an account? <Link to="/registration" className="ml-1 font-medium text-indigo-600 hover:text-indigo-500 hover:underline">Sign Up</Link></p>
                         </div>
                     </div>
-                </div>  
+                </div>
             </main>
         </>
     )

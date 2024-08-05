@@ -27,7 +27,7 @@ const Step3 = ({ userData, handleNext }) => {
             && error.cityValid
             && error.countryValid
         ) {
-            handleNext();
+            handleNext(formData);
         } else {
             setError(error);
             setSnackbarOpen(true);

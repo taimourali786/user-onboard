@@ -1,11 +1,16 @@
-import { RouterProvider } from 'react-router-dom';
+import { RouterProvider, useNavigate, useNavigation } from 'react-router-dom';
 import router from './Routes.jsx';
-import { AuthProvider } from './utils/AuthContext.jsx';
+import { AuthProvider } from './context/AuthContext.jsx';
+import { ErrorProvider } from './context/ErrorContext.jsx';
+import { ErrorAlert } from './components/base/ErrorAlert.jsx';
 function App() {
   return (
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <ErrorProvider>
+      <AuthProvider>
+        <ErrorAlert />
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </ErrorProvider>
   )
 }
 
