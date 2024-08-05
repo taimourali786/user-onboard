@@ -3,9 +3,6 @@ import { useState } from "react";
 
 const Step4 = ({ userData, preferences, handleNext }) => {
     const [userPreferences, setUserPreferences] = useState(userData);
-
-    console.log(userData);
-
     const handleCheckChanged = (key, checked) => {
         setUserPreferences(prevValues => ({
             ...prevValues,

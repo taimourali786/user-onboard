@@ -1,4 +1,4 @@
-import { GET_PREFERENCES, GET_USER, LOGIN, REGISTRAtION_1, SEND_OTP, VALIDATE_OTP, POST_PREFERENCES } from "./ApiUrl";
+import { GET_PREFERENCES, GET_USER, LOGIN, REGISTRAtION_1, SEND_OTP, VALIDATE_OTP, POST_PREFERENCES, UPDATE_IMAGE } from "./ApiUrl";
 
 
 import { useError } from './context/ErrorContext';
@@ -95,6 +95,11 @@ export const useHttpClient = () => {
         const response = await performPost(POST_PREFERENCES, body);
         return true;
     }
+    
+    const postImage = async(body) => {
+        const response = await performPost(UPDATE_IMAGE, body);
+        return true;
+    }
 
     return {
         performGet,
@@ -105,7 +110,8 @@ export const useHttpClient = () => {
         validateOtp,
         getUser,
         getPreferences,
-        postPreferences
+        postPreferences,
+        postImage
     };
 };
 

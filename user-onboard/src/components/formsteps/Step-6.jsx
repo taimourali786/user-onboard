@@ -14,26 +14,20 @@ const initialError = {
     addressValid: true,
     message: ""
 }
-const Step6 = ({ userData, handleNext }) => {
-    const [formData, setFormData] = useState(userData);
-    const [error, setError] = useState(initialError);
-
-    const onNextClick = (event) => {
+const Step6 = ({ imageBase64, handleNext }) => {
+    const [selectedFile, setSelectedFile] = useState(imageBase64);
+    const [previewUrl, setPreviewUrl] = useState(null);
+    // console.log(selectedFile);
+    const onNextClick = async (event) => {
         event.preventDefault();
-        const error = validateStep5(formData);
-        if (error.cardValid
-            && error.expiryValid
-            && error.cvvValid
-            && error.nameValid
-            && error.addressValid
-        ) {
-            handleNext();
+        if (selectedFile) {
+            const base64String = await convertToBase64(selectedFile);
+            const image = { imageBase64: base64String };
+            handleNext(image);
         } else {
             setError(error);
         }
     }
-    const [selectedFile, setSelectedFile] = useState(null);
-    const [previewUrl, setPreviewUrl] = useState(null);
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -44,16 +38,17 @@ const Step6 = ({ userData, handleNext }) => {
             alert('File is too large or invalid type.');
         }
     };
-    const handleUpload = () => {
-        if (!selectedFile) {
-            alert('Please select a file first!');
-            return;
-        }
-        console.log(previewUrl)
-        console.log('Uploading file:', selectedFile);
+
+    const convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+        });
     };
-    const nextEnabled = formData.cardNumber !== "" && formData.expiry !== "" && formData.cvv !== ""
-        && formData.name !== "" && formData.address !== "";
+
+    const nextEnabled = selectedFile !== null;
     return (
         <div className="max-w-md mx-auto text-center bg-white px-6">
         <header className="mb-4">
@@ -79,9 +74,9 @@ const Step6 = ({ userData, handleNext }) => {
         </Box>
         <div>
             <Box display="flex" justifyContent="flex-end" mt={2} alignItems="flex-end">
-                <button type="submit" onClick={onNextClick} disabled={!formData.cardNumber || !formData.expiry || !formData.name}
+                <button type="submit" onClick={onNextClick} disabled={!nextEnabled}
                 className={`inline-flex justify-center whitespace-nowrap rounded-lg px-3.5 py-2.5 text-sm font-medium text-white shadow-sm shadow-indigo-950/10 focus:outline-none focus:ring focus:ring-indigo-300 focus-visible:outline-none focus-visible:ring focus-visible:ring-indigo-300 transition-colors duration-150 ${
-                    formData.cardNumber && formData.expiry && formData.name
+                    selectedFile
                         ? 'bg-indigo-500 hover:bg-indigo-600' 
                         : 'bg-indigo-300 cursor-not-allowed'
                 }`}

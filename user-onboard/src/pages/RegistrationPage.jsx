@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import MobileStepper from '@mui/material/MobileStepper';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
@@ -35,7 +35,8 @@ const initialUserState = {
     address1: "",
     address2: "",
     city: "",
-    country: ""
+    country: "",
+    completed: false
   },
   step4: {},
   step5: {
@@ -61,7 +62,8 @@ const buildInitialState = (user) => {
     address1: user.address.address1 || "",
     address2: user.address.address2 || "",
     city: user.address.city || "",
-    country: user.address.country || ""
+    country: user.address.country || "",
+    completed: true
 
   }
   const prefList = user.userPreferences;
@@ -72,7 +74,7 @@ const buildInitialState = (user) => {
 
 }
 function RegistrationPage() {
-  const { performRegistration1, sendOtp, validateOtp, performPost, getPreferences, postPreferences } = useHttpClient();
+  const { performRegistration1, sendOtp, validateOtp, performPost, getPreferences, postPreferences, postImage } = useHttpClient();
   const { user, isAuthenticated } = React.useContext(AuthContext);
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
@@ -81,6 +83,7 @@ function RegistrationPage() {
   const [timeLeft, setTimeLeft] = React.useState(0);
   const [otpExpired, setOtpExpired] = React.useState(true);
   const [preferences, setPreferences] = React.useState({});
+  const navigate = useNavigate();
   const maxSteps = 6;
 
   React.useEffect(() => {
@@ -95,13 +98,13 @@ function RegistrationPage() {
     return () => clearInterval(intervalId);
   }, [timeLeft]);
 
-  React.useEffect(() => {
-    if (user !== null) {
-      setUserData(buildInitialState(user));
-    } else {
-      setUserData(initialUserState);
-    }
-  }, [user]);
+  // React.useEffect(() => {
+  //   if (user !== null) {
+  //     setUserData(buildInitialState(user));
+  //   } else {
+  //     setUserData(initialUserState);
+  //   }
+  // }, [user]);
 
   React.useEffect(() => {
     if (isAuthenticated) {
@@ -116,9 +119,6 @@ function RegistrationPage() {
   }
 
   const handleNext = () => {
-    setLoading(true);
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setLoading(false);
     if (activeStep === 0 && userData.step2.completed === true) {
       setActiveStep((prevActiveStep) => prevActiveStep + 2);
     } else {
@@ -127,23 +127,15 @@ function RegistrationPage() {
   };
 
   const handleSkip = () => {
-    //perform some functions
-    handleNext();
+
+    if (activeStep === 4) {
+      handleNext();
+    } else if (activeStep === 5) {
+      navigate("/");
+    }
   }
 
   const handleStepOneNext = async (formData) => {
-    console.log(formData);
-    setLoading(true);
-    await sendOtp({ email: formData.email });
-    setUserData((prevData) => ({
-      ...prevData,
-      step1: formData,
-      step2: {
-        ...prevData,
-        sendOtp: true,
-      },
-    }));
-    setLoading(false);
     if (userData.step1.completed === false) {
       setLoading(true)
       try {
@@ -188,34 +180,38 @@ function RegistrationPage() {
     }
     handleNext();
   }
+
   const resendOtp = async () => {
     setLoading(true);
     try {
       await sendOtp(userData.step1.email);
       setTimeLeft(otpExpiryTimeSeconds);
       setOtpExpired(false);
-    } catch {
+    } finally {
       setLoading(false);
     }
   }
-  const handleStepThreeNext = async (formData) => {
-    setLoading(true);
-    await validateOtp({ email: userData.step1.email, otp: otp });
-    setUserData((prevValue) => ({
-      ...prevValue,
-      step2: {
-        ...prevValue.step2,
-        isValidated: true,
-      },
-    }));
-    setLoading(false);
-    handleNext();
-  };
 
-  const handleStepFoureNext = async(formData) => {
+  const handleStepThreeNext = async (formData) => {
     setLoading(true);
     try {
       await performPost(REGISTRAtION_2, formData);
+      setUserData((prevValue) => ({
+        ...prevValue,
+        step3: {
+          ...formData
+        },
+      }));
+    } finally {
+      setLoading(false);
+      handleNext();
+    }
+  };
+
+  const handleStepFourNext = async (formData) => {
+    setLoading(true);
+    try {
+      await postPreferences(formData);
     } catch (error) {
       setLoading(false);
       return;
@@ -235,12 +231,12 @@ function RegistrationPage() {
     handleNext();
   };
 
-  const handleStepSixNext = (formData) => {
+  const handleStepSixNext = async (imageBase64) => {
     setLoading(true);
-    // call api
-    setLoading(false);
-    handleNext();
-  };
+    await postImage(imageBase64);
+    navigate("/");
+
+  }
 
   const handleBack = () => {
     if (activeStep === 2 && userData.step2.completed === true) {
@@ -269,103 +265,100 @@ function RegistrationPage() {
     heading = "Profile Picture"
   }
   let skipEnabled = activeStep < 4
-  return (
+  return (<>
+    <Spinner loading={loading} />
     <div className="flex min-h-screen">
-      <Spinner loading={loading} />
-
-      <div className="flex min-h-screen">
-        <div className="hidden lg:flex items-center justify-center flex-1 bg-white text-black">
-          <div className="max-w-md text-center">
-            <Logo />
-          </div>
+      <div className="hidden lg:flex items-center justify-center flex-1 bg-white text-black">
+        <div className="max-w-md text-center">
+          <Logo />
         </div>
-        <div className="flex-1 flex items-center justify-center bg-gray-100 p-4">
-          <div className="max-w-lg w-full bg-white shadow-xl rounded-xl p-6">
-            <div className="max-w-lg w-full bg-white shadow-xl rounded-xl p-6">
-              <Paper
-                square
-                elevation={0}
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  height: 50,
-                  pl: 2,
-                  bgcolor: 'background.default',
-                }}
-              >
-                <FormHeading>{heading}</FormHeading>
-              </Paper>
-              <SwipeableViews
-                axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                index={activeStep}
-                onChangeIndex={handleStepChange}
-              >
-                <div>
-                  {Math.abs(activeStep - 0) <= 5 ? <Step1 userData={userData.step1} handleNext={handleStepOneNext} /> : null}
-                </div>
-                <div>
-                  {Math.abs(activeStep - 1) <= 5 ? <Step2 userData={userData.step2}
-                    otpExpiry={timeLeft}
-                    otpExpired={otpExpired}
-                    sendOtp={resendOtp}
-                    handleNext={verifyOtp}
-                  /> : null}
-                </div>
-                <div>
-                  {Math.abs(activeStep - 2) <= 5 ? <Step3 handleNext={handleStepThreeNext} userData={userData.step3} /> : null}
-                </div>
-                <div>
-                  {Math.abs(activeStep - 3) <= 5 ? <Step4 handleNext={handleStepFoureNext} userData={userData.step4} preferences={preferences} /> : null}
-                </div>
-                <div>
-                  {Math.abs(activeStep - 4) <= 5 ? <Step5 handleNext={handleStepFiveNext} userData={userData.step5} /> : null}
-                </div>
-                <div>
-                  {Math.abs(activeStep - 5) <= 5 ? <Step6 handleNext={handleStepFoureNext} userData={userData.step6} /> : null}
-                </div>
-              </SwipeableViews>
-              <div className='mb-5'>
-                <MobileStepper
-                  steps={maxSteps}
-                  position="static"
-                  activeStep={activeStep}
-                  nextButton={
-                    <Button
-                      size="small"
-                      onClick={handleSkip}
-                      disabled={skipEnabled}
-                      sx={{ color: '#6366F1' }}
-                    >
-                      {activeStep <= 4 ? "Skip" : "Skip & Submit"}
-                    </Button>
-                  }
-                  backButton={
-                    <Button size="small" onClick={handleBack} disabled={activeStep === 0}
-                      sx={{ color: '#6366F1' }}>
-                      Back
-                    </Button>
-                  }
-                  sx={{
-                    '& .MuiMobileStepper-dot': {
-                      backgroundColor: '#E0E7FF', // Lighter tone for inactive dots
-                    },
-                    '& .MuiMobileStepper-dotActive': {
-                      backgroundColor: '#6366F1', // Lighter tone for active dot
-                    },
-                  }}
-                />
-              </div>
-              <div className="flex items-center justify-center align-middle">
-                <div className="text-sm">
-                  Already have an account?
-                  <Link to="/login" className="ml-1 font-medium text-indigo-600 hover:text-indigo-500 hover:underline">Log in</Link>
-                </div>
-              </div>
+      </div>
+      <div className="flex-1 flex items-center justify-center bg-gray-100 p-4">
+        <div className="max-w-lg w-full bg-white shadow-xl rounded-xl p-6">
+          <Paper
+            square
+            elevation={0}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              height: 50,
+              pl: 2,
+              bgcolor: 'background.default',
+            }}
+          >
+            <FormHeading>{heading}</FormHeading>
+          </Paper>
+          <SwipeableViews
+            axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+            index={activeStep}
+            onChangeIndex={handleStepChange}
+          >
+            <div>
+              {Math.abs(activeStep - 0) <= 5 ? <Step1 userData={userData.step1} handleNext={handleStepOneNext} /> : null}
+            </div>
+            <div>
+              {Math.abs(activeStep - 1) <= 5 ? <Step2 userData={userData.step2}
+                otpExpiry={timeLeft}
+                otpExpired={otpExpired}
+                sendOtp={resendOtp}
+                handleNext={verifyOtp}
+              /> : null}
+            </div>
+            <div>
+              {Math.abs(activeStep - 2) <= 5 ? <Step3 handleNext={handleStepThreeNext} userData={userData.step3} /> : null}
+            </div>
+            <div>
+              {Math.abs(activeStep - 3) <= 5 ? <Step4 handleNext={handleStepFourNext} userData={userData.step4} preferences={preferences} /> : null}
+            </div>
+            <div>
+              {Math.abs(activeStep - 4) <= 5 ? <Step5 handleNext={handleStepFiveNext} userData={userData.step5} /> : null}
+            </div>
+            <div>
+              {Math.abs(activeStep - 5) <= 5 ? <Step6 handleNext={handleStepSixNext} userData={userData.step6} /> : null}
+            </div>
+          </SwipeableViews>
+          <div className='mb-5'>
+            <MobileStepper
+              steps={maxSteps}
+              position="static"
+              activeStep={activeStep}
+              nextButton={
+                <Button
+                  size="small"
+                  onClick={handleSkip}
+                  disabled={skipEnabled}
+                  sx={{ color: '#6366F1' }}
+                >
+                  {activeStep <= 4 ? "Skip" : "Skip & Submit"}
+                </Button>
+              }
+              backButton={
+                <Button size="small" onClick={handleBack} disabled={activeStep === 0}
+                  sx={{ color: '#6366F1' }}>
+                  Back
+                </Button>
+              }
+              sx={{
+                '& .MuiMobileStepper-dot': {
+                  backgroundColor: '#E0E7FF', // Lighter tone for inactive dots
+                },
+                '& .MuiMobileStepper-dotActive': {
+                  backgroundColor: '#6366F1', // Lighter tone for active dot
+                },
+              }}
+            />
+          </div>
+          <div className="flex items-center justify-center align-middle">
+            <div className="text-sm">
+              Already have an account?
+              <Link to="/login" className="ml-1 font-medium text-indigo-600 hover:text-indigo-500 hover:underline">Log in</Link>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </>
+
   );
 }
 export default RegistrationPage;
