@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 import { AuthContext } from '../context/AuthContext.jsx';
 import ProfileImage from "../components/base/ProfileImage.jsx";
+import Spinner from "../components/base/Spinner.jsx";
 const initialUser = {
   email: "abc@gmail.com",
   password: "********",
@@ -16,12 +17,14 @@ const initialUser = {
   ]
 }
 export default function HomePage() {
-  const { logout, user } = useContext(AuthContext);
+  const { logout, user , authLoading} = useContext(AuthContext);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [preferences, setPreferences] = useState([]);
+  const [loading, setLoading] = useState(false); 
+
   useEffect(() => {
-    setPreferences(initialUser.preferences);
-  })
+    setLoading(authLoading);
+  },[authLoading]);
+
   let preferenceCheckboxes = Object.values(initialUser.preferences).map(pref => {
     return <FormControlLabel
       key={pref.preferenceId}
@@ -65,6 +68,7 @@ export default function HomePage() {
 
   return (
     <>
+    <Spinner loading={loading} />
       <main>
         <div className="flex h-screen bg-gray-100">
           {/* Left Navigation Menu */}

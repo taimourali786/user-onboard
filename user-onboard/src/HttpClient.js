@@ -1,4 +1,4 @@
-import { GET_PREFERENCES, GET_USER, LOGIN, REGISTRAtION_1, SEND_OTP, VALIDATE_OTP, POST_PREFERENCES, UPDATE_IMAGE } from "./ApiUrl";
+import { GET_PREFERENCES, GET_USER, LOGIN, REGISTRAtION_1, SEND_OTP, VALIDATE_OTP, POST_PREFERENCES, UPDATE_IMAGE, CARD_STATUS_UPDATE } from "./ApiUrl";
 
 
 import { useError } from './context/ErrorContext';
@@ -100,6 +100,10 @@ export const useHttpClient = () => {
         const response = await performPost(UPDATE_IMAGE, body);
         return true;
     }
+    const updateCardStatus = async(body) => {
+        const response = await performPost(CARD_STATUS_UPDATE, body);
+        return true;
+    }
 
     return {
         performGet,
@@ -111,7 +115,8 @@ export const useHttpClient = () => {
         getUser,
         getPreferences,
         postPreferences,
-        postImage
+        postImage,
+        updateCardStatus
     };
 };
 

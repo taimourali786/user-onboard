@@ -1,6 +1,5 @@
 import { useState, useRef } from 'react';
 import CountdownTimer from '../base/CountdownTimer';
-import Button from '@mui/material/Button';
 
 const Step2 = ({ handleNext, sendOtp, otpExpiry, otpExpired }) => {
   const [otp, setOtp] = useState(new Array(6).fill(""));

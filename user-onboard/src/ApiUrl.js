@@ -9,3 +9,4 @@ export const GET_USER = BASE_URL + "/user/profile";
 export const GET_PREFERENCES = BASE_URL + "/user/preferences/all";
 export const POST_PREFERENCES = BASE_URL + "/user/preferences/update";
 export const UPDATE_IMAGE = BASE_URL + "/user/image/update";
+export const CARD_STATUS_UPDATE = BASE_URL + "/user/card-status/update";

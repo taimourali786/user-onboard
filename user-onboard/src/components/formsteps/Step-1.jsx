@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Box, Snackbar, Alert, TextField } from '@mui/material';
+import { Button, Box, TextField } from '@mui/material';
 import { validateStep1 } from '../../utils/Validator.js';
 import { styled } from '@mui/material/styles';
 
@@ -37,7 +37,6 @@ const CustomButton = styled(Button)(({ theme }) => ({
 const Step1 = ({ userData, handleNext }) => {
   const [formData, setFormData] = useState(userData);
   const [error, setError] = useState(initialError);
-  // const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const onNextClick = () => {
     if (formData.completed) {

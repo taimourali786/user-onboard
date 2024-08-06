@@ -1,11 +1,12 @@
 import { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext.jsx';
-import { Snackbar, Alert, TextField } from '@mui/material';
+import { Snackbar, Alert, TextField, Fab } from '@mui/material';
 
 import FormHeading from "../components/base/FormHeading.jsx";
 import Logo from '../components/base/Logo.jsx';
 import { validateEmail, validatePassword } from '../utils/Validator.js';
+import Spinner from '../components/base/Spinner.jsx';
 
 export default function LoginPage() {
     const { login, user, isAuthenticated } = useContext(AuthContext);
@@ -51,12 +52,9 @@ export default function LoginPage() {
             setValidCredentials({ email: validateEmail(credentials.email), password: validatePassword(credentials.password) });
             return;
         }
-
         setLoading(true);
         await login(credentials);
-        if (isAuthenticated) {
-            navigate("/");
-        }
+        setLoading(false);
     };
 
     useEffect(() => {
@@ -68,6 +66,7 @@ export default function LoginPage() {
     
     return (
         <>
+        <Spinner loading={loading}/>
             <main className="flex min-h-screen">
                 <div className="hidden lg:flex items-center justify-center flex-1 bg-white text-black">
                     <div className="max-w-md text-center">
