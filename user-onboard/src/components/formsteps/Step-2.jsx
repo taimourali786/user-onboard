@@ -85,13 +85,7 @@ const Step2 = ({ handleNext, sendOtp, otpExpiry, otpExpired }) => {
       </form>
       <div>
       </div>
-      <Button type="button"
-        disabled={!otpExpired}
-        onClick={sendOtp}
-        className="inline-flex justify-center whitespace-nowrap rounded-lg bg-indigo-500 px-3.5 py-2.5 text-sm font-medium text-white shadow-sm shadow-indigo-950/10 hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-300 focus-visible:outline-none focus-visible:ring focus-visible:ring-indigo-300 transition-colors duration-150">
-        Resend OTP
-      </Button>
-      <div className="text-sm text-slate-500 mt-4">Didn't receive code? <a className="font-medium text-indigo-500 hover:text-indigo-600" href="#0" onClick={handleResend}>Resend</a></div>
+      <div className="text-sm text-slate-500 mt-4">Didn't receive code? <button className="font-medium text-indigo-500 hover:text-indigo-600" href="#0"  disabled={!otpExpired} onClick={sendOtp}>Resend</button></div>
     </div>
   );
 };

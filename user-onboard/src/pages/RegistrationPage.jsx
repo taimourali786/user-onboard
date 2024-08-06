@@ -127,7 +127,6 @@ function RegistrationPage() {
   };
 
   const handleSkip = () => {
-
     if (activeStep === 4) {
       handleNext();
     } else if (activeStep === 5) {
@@ -151,11 +150,11 @@ function RegistrationPage() {
           completed: true
         }
       }))
-      setLoading(false);
       setOtpExpired(false);
       setTimeLeft(otpExpiryTimeSeconds);
     }
     handleNext();
+    setLoading(false);
   };
 
   const verifyOtp = async (otp) => {
@@ -170,15 +169,14 @@ function RegistrationPage() {
       setUserData(prevValue => ({
         ...prevValue,
         step2: {
-          ...prevValue.step2,
-          isValidated: true
+          completed:true
         }
       }))
-      setLoading(false);
       setOtpExpired(false);
       setTimeLeft(otpExpiryTimeSeconds);
     }
     handleNext();
+    setLoading(false);
   }
 
   const resendOtp = async () => {
@@ -203,8 +201,8 @@ function RegistrationPage() {
         },
       }));
     } finally {
-      setLoading(false);
       handleNext();
+      setLoading(false);
     }
   };
 
@@ -222,8 +220,8 @@ function RegistrationPage() {
         ...prevData,
       }
     }))
-    setLoading(false);
     handleNext();
+    setLoading(false);
   }
 
   const handleStepFiveNext = (formData) => {

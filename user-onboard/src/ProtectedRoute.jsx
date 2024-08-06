@@ -9,11 +9,11 @@ const ProtectedRoute = ({ element }) => {
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
-  else {
-    if (user !== null && user.profileStatus !== null || user.profileStatus !== 'completed') {
-      return <Navigate to="/registration" replace />;
-    }
-  }
+  // else {
+  //   if (user !== null && user.profileStatus !== null || user.profileStatus !== 'completed') {
+  //     return <Navigate to="/registration" replace />;
+  //   }
+  // }
 
   return element;
 };
