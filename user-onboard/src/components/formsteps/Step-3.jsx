@@ -55,6 +55,9 @@ const Step3 = ({ userData, handleNext }) => {
                     error={!error.dobValid}
                     helperText={!error.dobValid ? "Enter valid date of birth" : ""}
                     onChange={event => handleChange("dob", event.target.value)}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
                 />
                 <Box>
                     <Input

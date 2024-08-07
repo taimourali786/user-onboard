@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const ProfileImage = ({ base64Image }) => {
+const ProfileImage = ({ base64Image, fallBackSrc }) => {
   const [imageUrl, setImageUrl] = useState('');
 
   const base64ToBlob = (base64, contentType = 'image/png') => {
@@ -14,17 +14,27 @@ const ProfileImage = ({ base64Image }) => {
   };
 
   const convertAndDisplayImage = () => {
-    const imageBlob = base64ToBlob(base64Image);
-    const imageUrl = URL.createObjectURL(imageBlob);
-    setImageUrl(imageUrl);
+    if(base64Image) { 
+      const imageBlob = base64ToBlob(base64Image);
+      const imageUrl = URL.createObjectURL(imageBlob);
+      setImageUrl(imageUrl);
+    } else {
+      setImageUrl(fallBackSrc);
+    }
   };
   React.useEffect(()=>{
     convertAndDisplayImage();
-  },[base64Image]);
+  },[base64Image, fallBackSrc]);
   return (
-    <div>
-      {imageUrl && <img className="h-16 w-16 rounded-full" src={imageUrl} alt="User avatar" />}
-    </div>
+    <img 
+      src={imageUrl} 
+      alt="User avatar"
+      className="h-8 w-8 rounded-full"
+      onError={(e) => {
+        e.target.onerror = null;
+        e.target.src = fallbackSrc;
+      }}
+    />
   );
 };
 
