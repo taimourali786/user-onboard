@@ -213,3 +213,18 @@ input[type="date"]:focus::-webkit-datetime-edit {
   }
 }
 
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f0f0f0;
+}
+
