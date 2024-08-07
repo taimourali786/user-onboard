@@ -7,29 +7,16 @@ import ProfileImage from "../components/base/ProfileImage.jsx";
 import Spinner from "../components/base/Spinner.jsx";
 import UserInfo from "./child-pages/UserInfo.jsx";
 
-const initialUser = {
-  email: "abc@gmail.com",
-  password: "********",
-  preferences: [
-    { preferenceId: 1, preferenceName: "Preference1", preferenceValue: true },
-    { preferenceId: 2, preferenceName: "Preference2", preferenceValue: false },
-    { preferenceId: 3, preferenceName: "Preference3", preferenceValue: false },
-    { preferenceId: 4, preferenceName: "Preference4", preferenceValue: false },
-    { preferenceId: 5, preferenceName: "Preference5", preferenceValue: true },
-  ]
-}
 export default function HomePage() {
-  const { login, logout, authError, isAuthenticated } = useContext(AuthContext);
-  const [user, setUser] = useState(initialUser);
+  const { login, logout, authError, isAuthenticated, authLoading, user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState({});
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
     setLoading(authLoading);
   },[authLoading]);
 
-  let preferenceCheckboxes = Object.values(initialUser.preferences).map(pref => {
+  let preferenceCheckboxes = Object.values(user.userPreferences).map(pref => {
     return <FormControlLabel
       key={pref.preferenceId}
       control={
@@ -37,28 +24,13 @@ export default function HomePage() {
           key={pref.preferenceId}
           name={pref.preferenceName}
           onChange={event => handleCheckChanged(pref.preferenceId, event.target.checked)}
-          checked={pref.preferenceValue}
+          checked={userPreferences[pref.preferenceId]}
           disabled
         />
       }
       label={pref.preferenceName}
     />
   })
-  // preferenceCheckboxes = Object.values(preferences).map(pref => {
-  //   return <FormControlLabel
-  //     key={pref.preferenceId}
-  //     control={
-  //       <Checkbox
-  //         key={pref.preferenceId}
-  //         name={pref.preferenceName}
-  //         onChange={event => handleCheckChanged(pref.preferenceId, event.target.checked)}
-  //         checked={userPreferences[pref.preferenceId]}
-  //         disabled
-  //       />
-  //     }
-  //     label={pref.preferenceName}
-  //   />
-  // })
 
   const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
   // let preferenceCheckboxes = Object.values(user.preferences).map((prefKey, prefValue) => (
@@ -112,7 +84,8 @@ export default function HomePage() {
                 <Route path="/dashboard/module2" element={<div>Content 2</div>} />
                 <Route path="/dashboard" element={<div>Welcome to the dashboard!</div>} />
               </Routes> */}
-              <UserInfo preferences={preferenceCheckboxes || <p>No Preferences Exist for the user</p> }/>
+              <UserInfo preferences={preferenceCheckboxes || <p>No Preferences Exist for the user</p> }
+              userData={user}/>
             </main>
           </div>
         </div>
