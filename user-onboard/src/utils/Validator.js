@@ -20,7 +20,7 @@ export function validateStep1(step1Data) {
 }
 
 export function validateStep3(step3Data) {
-    let dobValid = step3Data.dob !== "";
+    let dobValid = step3Data.dob !== "" && step3Data.dob !== Date.now().toLocaleString();
     let address1Valid = step3Data.address1Valid !== "";
     let address2Valid = step3Data.address2Valid !== "";
     let cityValid = step3Data.cityValid !== "";
@@ -37,7 +37,7 @@ export function validateStep3(step3Data) {
 }
 
 export function validateStep5(step5Data){
-    let cardValid = step5Data.cardNumber !== "" && step5Data.cardNumber.length === 16;
+    let cardValid = step5Data.cardNumber !== "" && luhnAlgorithm(step5Data.cardNumber);
     let expiryValid = step5Data.expiry !== "" && step5Data.expiry.match(/(\b([0-9]|1[01])\\\d+\b)/g);
     let nameValid = step5Data.name !== "";
     const error = {
@@ -47,4 +47,17 @@ export function validateStep5(step5Data){
         message: "Invalid Card Details"
     }
     return error;
+}
+
+function luhnAlgorithm(number) {
+    const reversedNumber = number.toString().split('').reverse().map(Number);
+    const checksum = reversedNumber.reduce((sum, digit, index) => {
+        if (index % 2 === 1) {
+            const doubledDigit = digit * 2;
+            return sum + (doubledDigit > 9 ? doubledDigit - 9 : doubledDigit);
+        } else {
+            return sum + digit;
+        }
+    }, 0);
+    return checksum % 10 === 0;
 }

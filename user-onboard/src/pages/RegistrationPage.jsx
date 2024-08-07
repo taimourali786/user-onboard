@@ -31,7 +31,7 @@ const initialUserState = {
     completed: false
   },
   step3: {
-    dob: "",
+    dob: new Date().toJSON().slice(0, 10),
     address1: "",
     address2: "",
     city: "",
@@ -44,14 +44,14 @@ const initialUserState = {
   },
   step6: {}
 }
-const otpExpiryTimeSeconds = 5;
+const otpExpiryTimeSeconds = 120;
 
 const buildInitialState = (user) => {
   const state = initialUserState;
   state.step1 = {
     email: user.email,
-    password: "*",
-    confirmPassword: "*",
+    password: "*********",
+    confirmPassword: "*********",
     completed: true,
     passwordDisabled: true
   }
@@ -61,7 +61,8 @@ const buildInitialState = (user) => {
     address2: user.address.address2 || "",
     city: user.address.city || "",
     country: user.address.country || "",
-    completed: true
+    completed: true,
+    dob: user.dob || new Date().toJSON().slice(0, 10)
 
   }
   const prefList = user.userPreferences;
@@ -75,7 +76,7 @@ const buildInitialState = (user) => {
 function RegistrationPage() {
   const { performRegistration1, sendOtp, validateOtp, performPost,
     getPreferences, postPreferences, postImage, updateCardStatus } = useHttpClient();
-  const { user, isAuthenticated, authLoading, logout } = React.useContext(AuthContext);
+  const { user, isAuthenticated, authLoading, logout, refreshUser } = React.useContext(AuthContext);
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
   const [userData, setUserData] = React.useState(initialUserState);
@@ -98,24 +99,19 @@ function RegistrationPage() {
   }, [timeLeft]);
 
   React.useEffect(() => {
-    if (user !== null) {
-      setUserData(prevValue => buildInitialState(user)
-      );
-    } else {
-      setUserData(initialUserState);
-    }
-  }, [user]);
-
-  React.useEffect(() => {
-    setLoading(authLoading);
-  }, [authLoading]);
-
-  React.useEffect(() => {
     if (isAuthenticated) {
+      setUserData(prev => {
+        if (user !== null) {
+          return buildInitialState(user);
+        } 
+        return initialUserState;
+      })
       fetchPref();
+    } else{
+      return initialUserState;
     }
   }, [isAuthenticated]);
-
+  
   const fetchPref = async () => {
     const pref = await getPreferences();
     setPreferences(pref);
@@ -133,7 +129,8 @@ function RegistrationPage() {
     if (activeStep === 4) {
       handleNext();
     } else if (activeStep === 5) {
-      navigate("/");
+      logout();
+      navigate("/login");
     }
   }
 
@@ -153,6 +150,7 @@ function RegistrationPage() {
           completed: true
         }
       }))
+      refreshUser();
       setOtpExpired(false);
       setTimeLeft(otpExpiryTimeSeconds);
     }
@@ -253,7 +251,8 @@ function RegistrationPage() {
   const handleStepSixNext = async (imageBase64) => {
     setLoading(true);
     await postImage(imageBase64);
-    navigate("/");
+    logout();
+    navigate("/login");
   }
 
   const handleBack = () => {

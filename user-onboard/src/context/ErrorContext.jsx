@@ -9,10 +9,17 @@ export const ErrorProvider = ({ children }) => {
 
     const handleError = async (response) => {
         if (response.status === 401) {
-            console.log("masla")
+            //FIXME : logout here
+            // logout();
+            setError("Invalid Token");
+        } else if (response.status === 500) {
+            setError("Internal Server Error");
+        } else if (response === 'Failed to fetch') {
+            setError('Failed to fetch');
+        } else {
+            const msg = await getErrorMessage(response);
+            setError(msg);
         }
-        const msg = await getErrorMessage(response);
-        setError(msg);
     };
 
     const resetError = () => {
@@ -27,7 +34,8 @@ export const ErrorProvider = ({ children }) => {
 };
 
 const getErrorMessage = async (response) => {
-    return response.json().then(json => json.responseMessage);
+    const json = await response.json();
+    return  json.responseMessage;
 };
 
 export const useError = () => useContext(ErrorContext);
