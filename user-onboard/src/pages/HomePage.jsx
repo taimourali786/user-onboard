@@ -19,9 +19,11 @@ const initialUser = {
   ]
 }
 export default function HomePage() {
-  const { logout, user , authLoading} = useContext(AuthContext);
+  const { login, logout, authError, isAuthenticated } = useContext(AuthContext);
+  const [user, setUser] = useState(initialUser);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState({});
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [loading, setLoading] = useState(false); 
 
   useEffect(() => {
     setLoading(authLoading);
