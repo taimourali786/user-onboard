@@ -60,7 +60,7 @@ export default function LoginPage() {
     useEffect(() => {
         if (isAuthenticated) {
             setLoading(false);
-            navigate("/");
+            navigate("/home");
         }
     }, [isAuthenticated]);  
     

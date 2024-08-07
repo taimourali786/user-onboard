@@ -4,14 +4,16 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext.jsx';
 
 const ProtectedRoute = ({ element }) => {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, authLoading, user } = useAuth();
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
   else {
-    if (user !== null && user.profileCompletionStatus !== null || user.profileCompletionStatus !== true) {
-      return <Navigate to="/registration" replace />;
+    if (authLoading) {
+      if (user !== null && user.profileCompletionStatus !== null && user.profileCompletionStatus !== true) {
+        return <Navigate to="/registration" replace />;
+      }
     }
   }
 

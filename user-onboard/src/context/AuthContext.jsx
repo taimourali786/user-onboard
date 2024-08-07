@@ -16,8 +16,9 @@ export const AuthProvider = ({ children }) => {
             setUser(apiUser);
             setIsAuthenticated(true);
         } catch (error) {
+            console.error('Failed to fetch user info', error);
             logout();
-        } finally{
+        } finally {
             setAuthLoading(false);
         }
     };
@@ -33,23 +34,30 @@ export const AuthProvider = ({ children }) => {
         try {
             const token = await performLogin(credentials);
             if (token) {
+                setIsAuthenticated(true);
                 await getUserInfo();
             } else {
                 setIsAuthenticated(false);
             }
         } catch (error) {
+            console.error('Login failed', error);
             setIsAuthenticated(false);
-        } 
+        }
     };
 
     const logout = () => {
         localStorage.removeItem('authorization');
-        setIsAuthenticated(false);
         setUser(null);
+        setIsAuthenticated(false);
     };
 
+    const refreshUser = async () => {
+        if(user === null){
+            await getUserInfo();
+        }
+    }
     return (
-        <AuthContext.Provider value={{ isAuthenticated, user, authLoading, login, logout }}>
+        <AuthContext.Provider value={{ isAuthenticated, user, authLoading, refreshUser, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

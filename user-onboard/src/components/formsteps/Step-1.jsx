@@ -8,7 +8,7 @@ const initialError = {
   passwordLength: true,
   passwordsMatch: true,
   completed: false,
-  passwordDisabled: false
+  passwordDisabled: false,
 };
 
 const CustomButton = styled(Button)(({ theme }) => ({
@@ -82,6 +82,7 @@ const Step1 = ({ userData, handleNext }) => {
             className="mt-1 px-3 py-2 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm"
             value={formData.email}
             onChange={event => handleChange("email", event.target.value)}
+            disabled={formData.completed}
           />
           <TextField
             label="Password"
@@ -91,7 +92,7 @@ const Step1 = ({ userData, handleNext }) => {
             helperText={!error.passwordLength ? "Password must be 8 characters" : ""}
             value={formData.password}
             onChange={event => handleChange("password", event.target.value)}
-            disabled={formData.passwordDisabled}
+            disabled={formData.passwordDisabled || formData.completed}
             className="mt-1 px-3 py-2 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm"
           />
           <TextField
@@ -101,7 +102,7 @@ const Step1 = ({ userData, handleNext }) => {
             error={!error.passwordsMatch}
             helperText={!error.passwordsMatch ? "Password does not match" : ""}
             value={formData.confirmPassword}
-            disabled={formData.passwordDisabled}
+            disabled={formData.passwordDisabled || formData.completed}
             onChange={event => handleChange("confirmPassword", event.target.value)}
             className="mt-1 px-3 py-2 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm"
           />

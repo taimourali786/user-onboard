@@ -6,7 +6,7 @@ import ProtectedRoute from './ProtectedRoute';
 import NotFoundPage from './pages/NotFound';
 
 const router = createBrowserRouter([
-  {path: '/', element: <ProtectedRoute element={<HomePage />} />},
+  {path: '/home', element: <ProtectedRoute element={<HomePage />} />},
   {path: '/login', element: <LoginPage/>},
   {path: '/registration', element: <RegistrationPage/>},
   {path: '*', element: <NotFoundPage/>}
