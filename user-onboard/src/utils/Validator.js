@@ -38,7 +38,7 @@ export function validateStep3(step3Data) {
 
 export function validateStep5(step5Data){
     let cardValid = step5Data.cardNumber !== "" && luhnAlgorithm(step5Data.cardNumber);
-    let expiryValid = step5Data.expiry !== "" && step5Data.expiry.match(/(\b([0-9]|1[01])\\\d+\b)/g);
+    let expiryValid = step5Data.expiry !== "" && step5Data.expiry.match(/^(0[1-9]|1[0-2])\/?([0-9]{2})$/);
     let nameValid = step5Data.name !== "";
     const error = {
         cardValid: cardValid,
