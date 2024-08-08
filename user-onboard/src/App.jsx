@@ -15,7 +15,7 @@ function App() {
         <SuccessProvider>
           <AuthProvider>
             <Loading>
-              <SuccessAlert/>
+              <SuccessAlert />
               <ErrorAlert />
               <RouterProvider router={router} />
             </Loading>

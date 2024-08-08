@@ -61,6 +61,7 @@ export const AuthProvider = ({ children }) => {
     const refreshUser = async () => {
         if (user === null) {
             await getUserInfo();
+            setIsAuthenticated(true);
         }
     }
     return (

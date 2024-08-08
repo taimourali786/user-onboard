@@ -1,16 +1,12 @@
 import React, { createContext, useState, useContext } from 'react';
-import { useAuth } from './AuthContext';
 
 const ErrorContext = createContext();
 
 export const ErrorProvider = ({ children }) => {
     const [error, setError] = useState(null);
-    // const { logout } = useAuth();
 
     const handleError = async (response) => {
         if (response.status === 401) {
-            //FIXME : logout here
-            // logout();
             setError("Invalid Token");
         } else if (response.status === 500) {
             setError("Internal Server Error");

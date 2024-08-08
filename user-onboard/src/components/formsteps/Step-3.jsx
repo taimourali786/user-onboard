@@ -34,7 +34,6 @@ const Step3 = ({ userData, handleNext }) => {
         }
     }
     const handleChange = (name, value) => {
-        console.log(formData.dob);
         setFormData(prevValues =>
         ({
             ...prevValues,

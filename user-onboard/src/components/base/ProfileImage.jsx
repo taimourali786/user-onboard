@@ -32,7 +32,7 @@ const ProfileImage = ({ base64Image, fallBackSrc }) => {
       className="h-8 w-8 rounded-full"
       onError={(e) => {
         e.target.onerror = null;
-        e.target.src = fallbackSrc;
+        e.target.src = fallBackSrc;
       }}
     />
   );

@@ -9,7 +9,7 @@ export const SuccessAlert = () => {
     useEffect(() => {
         if (success) {
             const timer = setTimeout(() => {
-                resetError();
+                resetSuccess();
             }, 5000); // Hide error after 5 seconds
             return () => clearTimeout(timer);
         }
@@ -25,7 +25,7 @@ export const SuccessAlert = () => {
                 onClose={resetSuccess}
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             >
-                <Alert onClose={resetSuccess} severity="succuss" sx={{ width: '300px' }}>
+                <Alert onClose={resetSuccess} severity="success" sx={{ width: '300px' }}>
                     {success}
                 </Alert>
             </Snackbar>

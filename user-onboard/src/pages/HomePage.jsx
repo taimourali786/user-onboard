@@ -18,7 +18,7 @@ export default function HomePage() {
             key={pref.preferenceId}
             name={pref.preferenceName}
             onChange={event => handleCheckChanged(pref.preferenceId, event.target.checked)}
-            checked={user.userPreferences[pref.preferenceId]}
+            checked={pref.preferenceValue}
             disabled
           />
         }

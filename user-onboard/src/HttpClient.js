@@ -1,6 +1,7 @@
 import { useError } from './context/ErrorContext';
 
 import { GET_PREFERENCES, GET_USER, LOGIN, REGISTRAtION_1, SEND_OTP, VALIDATE_OTP, POST_PREFERENCES, UPDATE_IMAGE, CARD_STATUS_UPDATE } from "./ApiUrl";
+import { useAuth } from './context/AuthContext';
 
 export const useHttpClient = () => {
     const { handleError } = useError();

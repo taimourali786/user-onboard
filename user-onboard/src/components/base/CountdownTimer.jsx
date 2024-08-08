@@ -9,9 +9,9 @@ const CountdownTimer = ({timeLeft}) => {
     };
 
     return (
-        <div>
+        <>
             <p>{formatTime(timeLeft)}</p>
-        </div>
+        </>
     );
 };
 
