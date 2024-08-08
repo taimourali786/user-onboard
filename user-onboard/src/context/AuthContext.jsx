@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 import { useHttpClient } from '../HttpClient';
+import { useLoading } from './LoadingContext';
 
 export const AuthContext = createContext();
 
@@ -7,41 +8,47 @@ export const AuthProvider = ({ children }) => {
     const { performLogin, getUser } = useHttpClient();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [user, setUser] = useState(null);
-    const [authLoading, setAuthLoading] = useState(false);
+    const { startLoading, stopLoading } = useLoading();
 
     const getUserInfo = async () => {
         try {
-            setAuthLoading(true);
             const apiUser = await getUser();
             setUser(apiUser);
-            setIsAuthenticated(true);
         } catch (error) {
-            console.error('Failed to fetch user info', error);
             logout();
-        } finally {
-            setAuthLoading(false);
         }
-    };
+    }
 
     useEffect(() => {
-        const token = localStorage.getItem('authorization');
-        if (token) {
-            getUserInfo();
-        }
+        const initializeAuth = async () => {
+            const token = localStorage.getItem('authorization');
+            if (token) {
+                startLoading();
+                    await getUserInfo();
+                setIsAuthenticated(true);
+                stopLoading();
+            }
+        };
+        initializeAuth();
     }, []);
+
+    useEffect(() => {
+        console.log("Is Auth", isAuthenticated);
+    }, [isAuthenticated])
 
     const login = async (credentials) => {
         try {
+            startLoading();
             const token = await performLogin(credentials);
             if (token) {
-                setIsAuthenticated(true);
                 await getUserInfo();
-            } else {
-                setIsAuthenticated(false);
+                setIsAuthenticated(true);
             }
         } catch (error) {
             console.error('Login failed', error);
             setIsAuthenticated(false);
+        } finally {
+            stopLoading();
         }
     };
 
@@ -52,12 +59,12 @@ export const AuthProvider = ({ children }) => {
     };
 
     const refreshUser = async () => {
-        if(user === null){
+        if (user === null) {
             await getUserInfo();
         }
     }
     return (
-        <AuthContext.Provider value={{ isAuthenticated, user, authLoading, refreshUser, login, logout }}>
+        <AuthContext.Provider value={{ isAuthenticated, user, refreshUser, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

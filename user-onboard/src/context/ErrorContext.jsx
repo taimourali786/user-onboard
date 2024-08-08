@@ -22,12 +22,16 @@ export const ErrorProvider = ({ children }) => {
         }
     };
 
+    const setErrorMessage = (msg) => {
+        setError(msg);
+    }
+
     const resetError = () => {
         setError(null);
     };
 
     return (
-        <ErrorContext.Provider value={{ error, handleError, resetError }}>
+        <ErrorContext.Provider value={{ error, handleError, resetError, setErrorMessage }}>
             {children}
         </ErrorContext.Provider>
     );

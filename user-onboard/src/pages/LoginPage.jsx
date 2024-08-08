@@ -9,10 +9,9 @@ import { validateEmail, validatePassword } from '../utils/Validator.js';
 import Spinner from '../components/base/Spinner.jsx';
 
 export default function LoginPage() {
-    const { login, user, isAuthenticated } = useContext(AuthContext);
+    const { login, isAuthenticated } = useContext(AuthContext);
     const [credentials, setCredentials] = useState({ email: '', password: '' });
     const [validCredentials, setValidCredentials] = useState({ email: true, password: true })
-    const [loading, setLoading] = useState(false);
     let navigate = useNavigate();
 
     const handleInputChange = (field, value) => {
@@ -52,21 +51,17 @@ export default function LoginPage() {
             setValidCredentials({ email: validateEmail(credentials.email), password: validatePassword(credentials.password) });
             return;
         }
-        setLoading(true);
         await login(credentials);
-        setLoading(false);
     };
 
     useEffect(() => {
         if (isAuthenticated) {
-            setLoading(false);
             navigate("/home");
         }
     }, [isAuthenticated]);  
     
     return (
         <>
-        <Spinner loading={loading}/>
             <main className="flex min-h-screen">
                 <div className="hidden lg:flex items-center justify-center flex-1 bg-white text-black">
                     <div className="max-w-md text-center">

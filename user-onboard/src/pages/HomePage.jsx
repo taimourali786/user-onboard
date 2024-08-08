@@ -1,36 +1,30 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { FormControlLabel, Checkbox } from "@mui/material";
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-
-import { AuthContext } from '../context/AuthContext.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
 import ProfileImage from "../components/base/ProfileImage.jsx";
-import Spinner from "../components/base/Spinner.jsx";
 import UserInfo from "./child-pages/UserInfo.jsx";
+import { useLoading } from "../context/LoadingContext.jsx";
 
 export default function HomePage() {
-  const { login, logout, authError, isAuthenticated, authLoading, user } = useContext(AuthContext);
-  const [loading, setLoading] = useState(false);
+  const { logout, user } = useAuth();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
-  useEffect(() => {
-    setLoading(authLoading);
-  },[authLoading]);
-
-  let preferenceCheckboxes = Object.values(user.userPreferences).map(pref => {
-    return <FormControlLabel
-      key={pref.preferenceId}
-      control={
-        <Checkbox
-          key={pref.preferenceId}
-          name={pref.preferenceName}
-          onChange={event => handleCheckChanged(pref.preferenceId, event.target.checked)}
-          checked={userPreferences[pref.preferenceId]}
-          disabled
-        />
-      }
-      label={pref.preferenceName}
-    />
-  })
+  let preferenceCheckboxes =
+    Object.values(user !== null ? user.userPreferences : []).map(pref => {
+      return <FormControlLabel
+        key={pref.preferenceId}
+        control={
+          <Checkbox
+            key={pref.preferenceId}
+            name={pref.preferenceName}
+            onChange={event => handleCheckChanged(pref.preferenceId, event.target.checked)}
+            checked={user.userPreferences[pref.preferenceId]}
+            disabled
+          />
+        }
+        label={pref.preferenceName}
+      />
+    })
 
   const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
   // let preferenceCheckboxes = Object.values(user.preferences).map((prefKey, prefValue) => (
@@ -44,7 +38,6 @@ export default function HomePage() {
 
   return (
     <>
-    <Spinner loading={loading} />
       <main>
         <div className="flex h-screen bg-gray-100">
           {/* Left Navigation Menu */}
@@ -64,8 +57,8 @@ export default function HomePage() {
               <div className="text-xl">Dashboard</div>
               <div className="relative">
                 <button onClick={toggleDropdown} className="flex items-center focus:outline-none">
-                <ProfileImage 
-                    base64Image={user?.userImage?.imageBase64} 
+                  <ProfileImage
+                    base64Image={user?.userImage?.imageBase64}
                     fallBackSrc="/src/assets/user-profile.svg"
                   />
                 </button>
@@ -84,8 +77,8 @@ export default function HomePage() {
                 <Route path="/dashboard/module2" element={<div>Content 2</div>} />
                 <Route path="/dashboard" element={<div>Welcome to the dashboard!</div>} />
               </Routes> */}
-              <UserInfo preferences={preferenceCheckboxes || <p>No Preferences Exist for the user</p> }
-              userData={user}/>
+              <UserInfo preferences={preferenceCheckboxes || <p>No Preferences Exist for the user</p>}
+                userData={user} />
             </main>
           </div>
         </div>
@@ -97,6 +90,7 @@ export default function HomePage() {
                     Logout
                 </Button> */}
       </main >
+
     </>
   )
 }
