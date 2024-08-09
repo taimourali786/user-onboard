@@ -32,10 +32,6 @@ export const AuthProvider = ({ children }) => {
         initializeAuth();
     }, []);
 
-    useEffect(() => {
-        console.log("Is Auth", isAuthenticated);
-    }, [isAuthenticated])
-
     const login = async (credentials) => {
         try {
             startLoading();

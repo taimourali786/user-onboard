@@ -1,8 +1,8 @@
 import { Box, FormGroup, FormControlLabel, Checkbox } from "@mui/material";
 import { useState } from "react";
 
-const Step4 = ({ userData, preferences, handleNext }) => {
-    const [userPreferences, setUserPreferences] = useState(userData);
+const Step4 = ({ credentials, preferences, handleNext }) => {
+    const [userPreferences, setUserPreferences] = useState(credentials);
     const handleCheckChanged = (key, checked) => {
         setUserPreferences(prevValues => ({
             ...prevValues,
@@ -26,7 +26,6 @@ const Step4 = ({ userData, preferences, handleNext }) => {
         })
         handleNext(list);
     }
-
     let preferenceCheckboxes = Object.keys(preferences).map(p => {
         const pref = preferences[p];
         return <FormControlLabel

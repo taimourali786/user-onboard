@@ -10,13 +10,12 @@ const initialError = {
     nameValid: true,
     message: ""
 }
-const Step5 = ({ userData, handleNext }) => {
-    const [formData, setFormData] = useState(userData);
+const Step5 = ({ credentials, handleNext, handleChange }) => {
     const [error, setError] = useState(initialError);
 
     const onNextClick = (event) => {
         event.preventDefault();
-        const error = validateStep5(formData);
+        const error = validateStep5(credentials);
         if (error.cardValid
             && error.expiryValid
             && error.nameValid
@@ -26,15 +25,11 @@ const Step5 = ({ userData, handleNext }) => {
             setError(error);
         }
     }
-    const handleChange = (name, value) => {
-        setFormData(prevValues =>
-        ({
-            ...prevValues,
-            [name]: value
-        }));
+    const onChange = (name, value) => {
+        handleChange(name, value, 'step5')
         setError(initialError);
     }
-    const nextEnabled = formData.cardNumber !== "" && formData.expiry !== "" && formData.name !== "";
+    const nextEnabled = credentials.cardNumber !== "" && credentials.expiry !== "" && credentials.name !== "";
     return (
         <div>
             <div className="bg-gradient-to-r from-indigo-300 via-indigo-400 to-indigo-500 rounded-lg overflow-hidden shadow-lg">
@@ -62,8 +57,8 @@ const Step5 = ({ userData, handleNext }) => {
                                 variant="outlined"
                                 error={!error.cardValid}
                                 helperText={!error.cardValid ? "Invalid Card" : ""}
-                                onChange={event => handleChange("cardNumber", event.target.value)}
-                                value={formData.cardNumber}
+                                onChange={event => onChange("cardNumber", event.target.value)}
+                                value={credentials.cardNumber}
                             />
                             <Grid container spacing={2}>
                                 <Grid item xs={6}>
@@ -75,8 +70,8 @@ const Step5 = ({ userData, handleNext }) => {
                                         variant="outlined"
                                         error={!error.expiryValid}
                                         helperText={!error.expiryValid ? "Invalid Expiry" : ""}
-                                        onChange={(event => handleChange("expiry", event.target.value))}
-                                        value={formData.expiry}
+                                        onChange={(event => onChange("expiry", event.target.value))}
+                                        value={credentials.expiry}
                                     />
                                 </Grid>
                                 <Grid item xs={6}>
@@ -88,8 +83,8 @@ const Step5 = ({ userData, handleNext }) => {
                                         variant="outlined"
                                         error={!error.nameValid}
                                         helperText={!error.nameValid ? "Invalid Name" : ""}
-                                        onChange={(event => handleChange("name", event.target.value))}
-                                        value={formData.name}
+                                        onChange={(event => onChange("name", event.target.value))}
+                                        value={credentials.name}
                                     />
                                 </Grid>
                             </Grid>

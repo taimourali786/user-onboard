@@ -1,6 +1,6 @@
-import { Box, Grid, Snackbar, Alert } from '@mui/material';
-import Input from '../base/Input';
 import { useState } from 'react';
+import { Box, Grid } from '@mui/material';
+import Input from '../base/Input';
 import { validateStep3 } from '../../utils/Validator.js';
 
 const initialError = {
@@ -12,37 +12,29 @@ const initialError = {
     message: ""
 }
 
-const Step3 = ({ userData, handleNext }) => {
-
-    const [formData, setFormData] = useState(userData);
+const Step3 = ({ credentials, handleNext, handleChange }) => {
     const [error, setError] = useState(initialError);
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
 
     const onNextClick = (event) => {
         event.preventDefault();
-        const error = validateStep3(formData);
+        const error = validateStep3(credentials);
         if (error.dobValid
             && error.address1Valid
             && error.address2Valid
             && error.cityValid
             && error.countryValid
         ) {
-            handleNext(formData);
+            handleNext(credentials);
         } else {
             setError(error);
-            setSnackbarOpen(true);
         }
     }
-    const handleChange = (name, value) => {
-        setFormData(prevValues =>
-        ({
-            ...prevValues,
-            [name]: value
-        }));
+    const onChange = (name, value) => {
+        handleChange(name, value, 'step3')
         setError(initialError);
     }
-    const nextEnabled = formData.dob !== "" && formData.address1 !== "" && formData.address2 !== ""
-        && formData.city !== "" && formData.country !== "";
+    const nextEnabled = credentials.dob !== "" && credentials.address1 !== "" && credentials.address2 !== ""
+        && credentials.city !== "" && credentials.country !== "";
     return (<>
         <div>
             <Box component="form" noValidate autoComplete="off" sx={{ p: 2 }}>
@@ -51,10 +43,10 @@ const Step3 = ({ userData, handleNext }) => {
                     type="date"
                     margin="normal"
                     variant="outlined"
-                    value={formData.dob}
+                    value={credentials.dob}
                     error={!error.dobValid}
                     helperText={!error.dobValid ? "Enter valid date of birth" : ""}
-                    onChange={event => handleChange("dob", event.target.value)}
+                    onChange={event => onChange("dob", event.target.value)}
                     InputLabelProps={{
                         shrink: true,
                     }}
@@ -66,8 +58,8 @@ const Step3 = ({ userData, handleNext }) => {
                         type="text"
                         margin="normal"
                         variant="outlined"
-                        value={formData.address1}
-                        onChange={event => handleChange("address1", event.target.value)}
+                        value={credentials.address1}
+                        onChange={event => onChange("address1", event.target.value)}
                         error={!error.address1Valid}
                         helperText={!error.address1Valid ? "Enter valid address" : ""}
                     />
@@ -79,8 +71,8 @@ const Step3 = ({ userData, handleNext }) => {
                         variant="outlined"
                         error={!error.address2Valid}
                         helperText={!error.address2Valid ? "Enter valid address" : ""}
-                        value={formData.address2}
-                        onChange={event => handleChange("address2", event.target.value)}
+                        value={credentials.address2}
+                        onChange={event => onChange("address2", event.target.value)}
 
                     />
                     <Grid container spacing={2}>
@@ -93,8 +85,8 @@ const Step3 = ({ userData, handleNext }) => {
                                 variant="outlined"
                                 error={!error.cityValid}
                                 helperText={!error.cityValid ? "Enter valid City" : ""}
-                                value={formData.city}
-                                onChange={event => handleChange("city", event.target.value)}
+                                value={credentials.city}
+                                onChange={event => onChange("city", event.target.value)}
 
                             />
                         </Grid>
@@ -107,8 +99,8 @@ const Step3 = ({ userData, handleNext }) => {
                                 variant="outlined"
                                 error={!error.countryValid}
                                 helperText={!error.countryValid ? "Enter valid country" : ""}
-                                value={formData.country}
-                                onChange={event => handleChange("country", event.target.value)}
+                                value={credentials.country}
+                                onChange={event => onChange("country", event.target.value)}
                             />
                         </Grid>
                     </Grid>
@@ -126,16 +118,6 @@ const Step3 = ({ userData, handleNext }) => {
                         Next
                     </button>
                 </Box>
-                <Snackbar
-                    open={snackbarOpen}
-                    autoHideDuration={1000}
-                    onClose={() => setSnackbarOpen(false)}
-                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                >
-                    <Alert onClose={() => setSnackbarOpen(false)} severity="error" sx={{ width: '300px' }}>
-                    {error.message}
-                    </Alert>
-                </Snackbar>
             </Box>
         </div>
     </>

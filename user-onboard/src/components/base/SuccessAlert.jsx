@@ -20,7 +20,7 @@ export const SuccessAlert = () => {
     return (
         <div className="error-alert">
             <Snackbar
-                open={success}
+                open={success !== null}
                 autoHideDuration={5000}
                 onClose={resetSuccess}
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}

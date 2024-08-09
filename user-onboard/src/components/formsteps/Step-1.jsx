@@ -1,8 +1,6 @@
-import { useState } from 'react';
+import {useState } from 'react';
 import { Button, Box, TextField } from '@mui/material';
 import { validateStep1 } from '../../utils/Validator.js';
-import { styled } from '@mui/material/styles';
-
 const initialError = {
   emailValid: true,
   passwordLength: true,
@@ -11,56 +9,29 @@ const initialError = {
   passwordDisabled: false,
 };
 
-const CustomButton = styled(Button)(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'center',
-  padding: theme.spacing(1.5, 4),
-  border: '1px solid transparent',
-  borderRadius: '0.375rem',
-  boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-  fontSize: '0.875rem',
-  fontWeight: '500',
-  color: theme.palette.common.white,
-  backgroundColor: '#4F46E5',
-  maxHeight: '40px',
-  maxWidth: '80px',
-  '&:hover': {
-    backgroundColor: '#4338CA',
-  },
-  '&:focus': {
-    outline: 'none',
-    boxShadow: '0 0 0 4px rgba(99, 102, 241, 0.5)',
-  },
-  width: 'auto',
-}));
-
-const Step1 = ({ userData, handleNext }) => {
-  const [formData, setFormData] = useState(userData);
+const Step1 = ({ credentials, handleNext, handleChange }) => {
   const [error, setError] = useState(initialError);
+  console.log(credentials);
 
   const onNextClick = () => {
-    if (formData.completed) {
-      handleNext(formData);
+    if (credentials.completed) {
+      handleNext(credentials);
     } else {
-      const error = validateStep1(formData);
+      const error = validateStep1(credentials);
       if (error.emailValid && error.passwordLength && error.passwordsMatch) {
-        handleNext(formData);
+        handleNext(credentials);
       } else {
         setError(error);
-        setSnackbarOpen(true);
       }
     }
   };
 
-  const handleChange = (name, value) => {
-    setFormData(prevValues => ({
-      ...prevValues,
-      [name]: value
-    }));
+  const onChange = (name, value) => {
+    handleChange(name, value, 'step1');
     setError(initialError);
   };
 
-  const nextEnabled = formData.email !== '' && formData.password !== '' && formData.confirmPassword !== '';
+  const nextEnabled = credentials.email !== '' && credentials.password !== '' && credentials.confirmPassword !== '';
 
   return (
     <div>
@@ -80,9 +51,9 @@ const Step1 = ({ userData, handleNext }) => {
             error={!error.emailValid}
             helperText={!error.emailValid ? "Enter a valid Email" : ""}
             className="mt-1 px-3 py-2 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm"
-            value={formData.email}
-            onChange={event => handleChange("email", event.target.value)}
-            disabled={formData.completed}
+            value={credentials.email}
+            onChange={event => onChange("email", event.target.value)}
+            disabled={credentials.completed}
           />
           <TextField
             label="Password"
@@ -90,9 +61,9 @@ const Step1 = ({ userData, handleNext }) => {
             type="password"
             error={!error.passwordLength}
             helperText={!error.passwordLength ? "Password must be 8 characters" : ""}
-            value={formData.password}
-            onChange={event => handleChange("password", event.target.value)}
-            disabled={formData.passwordDisabled || formData.completed}
+            value={credentials.password}
+            onChange={event => onChange("password", event.target.value)}
+            disabled={credentials.passwordDisabled || credentials.completed}
             className="mt-1 px-3 py-2 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm"
           />
           <TextField
@@ -101,9 +72,9 @@ const Step1 = ({ userData, handleNext }) => {
             type="password"
             error={!error.passwordsMatch}
             helperText={!error.passwordsMatch ? "Password does not match" : ""}
-            value={formData.confirmPassword}
-            disabled={formData.passwordDisabled || formData.completed}
-            onChange={event => handleChange("confirmPassword", event.target.value)}
+            value={credentials.confirmPassword}
+            disabled={credentials.passwordDisabled || credentials.completed}
+            onChange={event => onChange("confirmPassword", event.target.value)}
             className="mt-1 px-3 py-2 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm"
           />
         </Box>

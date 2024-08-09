@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import MobileStepper from '@mui/material/MobileStepper';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
@@ -56,14 +56,14 @@ const buildInitialState = (user) => {
     completed: true,
     passwordDisabled: true
   }
-  state.step2.completed = user.otpVerified || true; // FIXME: Make this false
+  state.step2.completed = user.otpVerified || false;
   state.step3 = {
     address1: user.address.address1 || "",
     address2: user.address.address2 || "",
     city: user.address.city || "",
     country: user.address.country || "",
     completed: true,
-    dob: user.dob || new Date().toJSON().slice(0, 10)
+    dob: user.dob !== "0001-01-01" ? user.dob : new Date().toJSON().slice(0, 10)
 
   }
   const prefList = user.userPreferences;
@@ -81,13 +81,12 @@ function RegistrationPage() {
   const navigate = useNavigate();
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
-  const [userData, setUserData] = React.useState(initialUserState);
+  const [credentials, setCredentials] = React.useState(initialUserState);
   const [loading, setLoading] = React.useState(false);
   const [timeLeft, setTimeLeft] = React.useState(0);
   const [otpExpired, setOtpExpired] = React.useState(true);
   const [preferences, setPreferences] = React.useState({});
   const maxSteps = 6;
-
 
   React.useEffect(() => {
     if (timeLeft === 0) {
@@ -104,10 +103,10 @@ function RegistrationPage() {
   React.useEffect(() => {
     if (isAuthenticated) {
       const state = user === null ? initialUserState : buildInitialState(user);
-      setUserData(() => ({ ...state }));
+      setCredentials(() => ({ ...state }));
       fetchPref();
     } else {
-      setUserData(() => ({ ...initialUserState }));
+      setCredentials(() => ({ ...initialUserState }));
     }
   }, [isAuthenticated, user]);
 
@@ -117,7 +116,7 @@ function RegistrationPage() {
   }
 
   const handleNext = () => {
-    if (activeStep === 0 && userData.step2.completed === true) {
+    if (activeStep === 0 && credentials.step2.completed === true) {
       setActiveStep((prevActiveStep) => prevActiveStep + 2);
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -134,7 +133,7 @@ function RegistrationPage() {
     }
   }
   const handleStepOneNext = async (formData) => {
-    if (userData.step1.completed === false) {
+    if (credentials.step1.completed === false) {
       setLoading(true)
       try {
         await performRegistration1(formData);
@@ -142,7 +141,7 @@ function RegistrationPage() {
         setLoading(false);
         return;
       }
-      setUserData(prevData => ({
+      setCredentials(prevData => ({
         ...prevData,
         step1: {
           ...formData,
@@ -159,7 +158,7 @@ function RegistrationPage() {
   }
 
   const verifyOtp = async (otp) => {
-    if (userData.step2.completed === false) {
+    if (credentials.step2.completed === false) {
       setLoading(true);
       try {
         await validateOtp(otp);
@@ -167,11 +166,10 @@ function RegistrationPage() {
         setLoading(false);
         return;
       }
-      setUserData(prevValue => ({
+      setCredentials(prevValue => ({
         ...prevValue,
         step2: {
-          ...prevValue.step2,
-          isValidated: true
+          completed: true
         }
       }))
       setLoading(false);
@@ -183,7 +181,7 @@ function RegistrationPage() {
   const resendOtp = async () => {
     setLoading(true);
     try {
-      await sendOtp(userData.step1.email);
+      await sendOtp(credentials.step1.email);
       setTimeLeft(otpExpiryTimeSeconds);
       setOtpExpired(false);
     } catch {
@@ -198,7 +196,7 @@ function RegistrationPage() {
       setLoading(false);
       return;
     }
-    setUserData(prevData => ({
+    setCredentials(prevData => ({
       ...prevData,
       step3: {
         ...prevData,
@@ -208,15 +206,17 @@ function RegistrationPage() {
     handleNext();
   }
 
-  const handleStepFoureNext = async (formData) => {
+  const handleStepFourNext = async (formData) => {
     setLoading(true);
     await postPreferences(formData);
     setLoading(false);
     handleNext();
   }
 
-  const handleStepFiveNext = (formData) => {
-    // call api
+  const handleStepFiveNext = async (formData) => {
+    setLoading(true);
+    await updateCardStatus();
+    setLoading(false);
     handleNext();
   }
 
@@ -230,7 +230,7 @@ function RegistrationPage() {
   }
 
   const handleBack = () => {
-    if (activeStep === 2 && userData.step2.completed === true) {
+    if (activeStep === 2 && credentials.step2.completed === true) {
       setActiveStep((prevActiveStep) => prevActiveStep - 2);
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -244,6 +244,16 @@ function RegistrationPage() {
   const onLogin = () => {
     logout();
     navigate("/login");
+  }
+
+  const handleChange = (name, value, step) => {
+    setCredentials(p => ({
+      ...p,
+      [step]: {
+        ...p[step],
+        [name]: value
+      }
+    }))
   }
 
   let heading = null;
@@ -289,13 +299,12 @@ function RegistrationPage() {
               axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
               index={activeStep}
               onChangeIndex={handleStepChange}
-              disabled
             >
               <div>
-                {Math.abs(activeStep - 0) <= 5 ? <Step1 userData={userData.step1} handleNext={handleStepOneNext} /> : null}
+                {Math.abs(activeStep - 0) <= 5 ? <Step1 credentials={credentials.step1} handleNext={handleStepOneNext} handleChange={handleChange} /> : null}
               </div>
               <div>
-                {Math.abs(activeStep - 1) <= 5 ? <Step2 userData={userData.step2}
+                {Math.abs(activeStep - 1) <= 5 ? <Step2 credentials={credentials.step2}
                   otpExpiry={timeLeft}
                   otpExpired={otpExpired}
                   sendOtp={resendOtp}
@@ -303,16 +312,16 @@ function RegistrationPage() {
                 /> : null}
               </div>
               <div>
-                {Math.abs(activeStep - 2) <= 5 ? <Step3 handleNext={handleStepThreeNext} userData={userData.step3} /> : null}
+                {Math.abs(activeStep - 2) <= 5 ? <Step3 handleNext={handleStepThreeNext} credentials={credentials.step3} handleChange={handleChange} /> : null}
               </div>
               <div>
-                {Math.abs(activeStep - 3) <= 5 ? <Step4 handleNext={handleStepFoureNext} userData={userData.step4} preferences={preferences} /> : null}
+                {Math.abs(activeStep - 3) <= 5 ? <Step4 handleNext={handleStepFourNext} credentials={credentials.step4} preferences={preferences} /> : null}
               </div>
               <div>
-                {Math.abs(activeStep - 4) <= 5 ? <Step5 handleNext={handleStepFiveNext} userData={userData.step5} /> : null}
+                {Math.abs(activeStep - 4) <= 5 ? <Step5 handleNext={handleStepFiveNext} credentials={credentials.step5} handleChange={handleChange}/> : null}
               </div>
               <div>
-                {Math.abs(activeStep - 5) <= 5 ? <Step6 handleNext={handleStepSixNext} userData={userData.step6} /> : null}
+                {Math.abs(activeStep - 5) <= 5 ? <Step6 handleNext={handleStepSixNext} credentials={credentials.step6} /> : null}
               </div>
             </SwipeableViews>
             <div className='mb-5'>
