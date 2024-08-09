@@ -19,36 +19,38 @@ import { AuthContext } from '../context/AuthContext';
 import Spinner from '../components/base/Spinner';
 import { useSuccess } from '../context/SuccessContext';
 
-const initialUserState = {
-  step1: {
-    email: "",
-    password: "",
-    confirmPassword: "",
-    completed: false,
-    passwordDisabled: false
-  },
-  step2: {
-    completed: false
-  },
-  step3: {
-    dob: new Date().toJSON().slice(0, 10),
-    address1: "",
-    address2: "",
-    city: "",
-    country: ""
-  },
-  step4: {},
-  step5: {
-    cardNumber: "",
-    expiry: "",
-    name: "",
-  },
-  step6: {}
-}
-const otpExpiryTimeSeconds = 120;
 
+const getDefaultState = () => {
+  return {
+    step1: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+      completed: false,
+      passwordDisabled: false
+    },
+    step2: {
+      completed: false
+    },
+    step3: {
+      dob: new Date().toJSON().slice(0, 10),
+      address1: "",
+      address2: "",
+      city: "",
+      country: ""
+    },
+    step4: {},
+    step5: {
+      cardNumber: "",
+      expiry: "",
+      name: "",
+    },
+    step6: {}
+  }
+};
+const otpExpiryTimeSeconds = 120;
 const buildInitialState = (user) => {
-  const state = initialUserState;
+  const state = getDefaultState();
   state.step1 = {
     email: user.email,
     password: "*********",
@@ -76,6 +78,8 @@ const buildInitialState = (user) => {
 function RegistrationPage() {
   const { performRegistration1, sendOtp, validateOtp, performPost,
     getPreferences, postPreferences, postImage, updateCardStatus } = useHttpClient();
+  const initialUserState = getDefaultState();
+
   const { user, isAuthenticated, logout, refreshUser } = React.useContext(AuthContext);
   const { handleSuccess } = useSuccess();
   const navigate = useNavigate();
@@ -102,11 +106,12 @@ function RegistrationPage() {
 
   React.useEffect(() => {
     if (isAuthenticated) {
-      const state = user === null ? initialUserState : buildInitialState(user);
+      const state = user === null ? getDefaultState() : buildInitialState(user);
       setCredentials(() => ({ ...state }));
       fetchPref();
     } else {
-      setCredentials(() => ({ ...initialUserState }));
+      const state = getDefaultState();
+      setCredentials(() => ({ ...state }));
     }
   }, [isAuthenticated, user]);
 
@@ -114,6 +119,11 @@ function RegistrationPage() {
     const pref = await getPreferences();
     setPreferences(pref);
   }
+
+  const resetUser = () => {
+    const state = getDefaultState();
+    return { ...state };
+  };
 
   const handleNext = () => {
     if (activeStep === 0 && credentials.step2.completed === true) {
@@ -129,6 +139,7 @@ function RegistrationPage() {
     } else if (activeStep === 5) {
       handleSuccess("User Creation Complete!");
       logout();
+      resetUser();
       navigate("/login");
     }
   }
@@ -151,7 +162,7 @@ function RegistrationPage() {
       await refreshUser();
       setOtpExpired(false);
       setTimeLeft(otpExpiryTimeSeconds);
-    } else if(credentials.step1.completed === true && credentials.step2.completed === false){
+    } else if (credentials.step1.completed === true && credentials.step2.completed === false) {
       await resendOtp();
       setOtpExpired(false);
       setTimeLeft(otpExpiryTimeSeconds);
@@ -230,6 +241,7 @@ function RegistrationPage() {
     setLoading(false);
     handleSuccess("User Creation Complete!");
     logout();
+    resetUser();
     navigate("/login");
   }
 
@@ -245,8 +257,9 @@ function RegistrationPage() {
     setActiveStep(step);
   };
 
-  const onLogin = () => {
+  const onLogin = async () => {
     logout();
+    await resetUser();
     navigate("/login");
   }
 
@@ -322,7 +335,7 @@ function RegistrationPage() {
                 {Math.abs(activeStep - 3) <= 5 ? <Step4 handleNext={handleStepFourNext} credentials={credentials.step4} preferences={preferences} /> : null}
               </div>
               <div>
-                {Math.abs(activeStep - 4) <= 5 ? <Step5 handleNext={handleStepFiveNext} credentials={credentials.step5} handleChange={handleChange}/> : null}
+                {Math.abs(activeStep - 4) <= 5 ? <Step5 handleNext={handleStepFiveNext} credentials={credentials.step5} handleChange={handleChange} /> : null}
               </div>
               <div>
                 {Math.abs(activeStep - 5) <= 5 ? <Step6 handleNext={handleStepSixNext} credentials={credentials.step6} /> : null}

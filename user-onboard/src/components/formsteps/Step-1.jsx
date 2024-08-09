@@ -11,7 +11,6 @@ const initialError = {
 
 const Step1 = ({ credentials, handleNext, handleChange }) => {
   const [error, setError] = useState(initialError);
-  console.log(credentials);
 
   const onNextClick = () => {
     if (credentials.completed) {
