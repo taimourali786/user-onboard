@@ -148,7 +148,11 @@ function RegistrationPage() {
           completed: true
         }
       }))
-      refreshUser();
+      await refreshUser();
+      setOtpExpired(false);
+      setTimeLeft(otpExpiryTimeSeconds);
+    } else if(credentials.step1.completed === true && credentials.step2.completed === false){
+      await resendOtp();
       setOtpExpired(false);
       setTimeLeft(otpExpiryTimeSeconds);
     }
@@ -184,7 +188,7 @@ function RegistrationPage() {
       await sendOtp(credentials.step1.email);
       setTimeLeft(otpExpiryTimeSeconds);
       setOtpExpired(false);
-    } catch {
+    } finally {
       setLoading(false);
     }
   }
