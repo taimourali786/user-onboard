@@ -12,7 +12,7 @@ const initialError = {
     message: ""
 }
 
-const Step3 = ({ credentials, handleNext, handleChange }) => {
+export const Step3 = ({ credentials, handleNext, handleChange }) => {
     const [error, setError] = useState(initialError);
 
     const onNextClick = (event) => {
@@ -124,5 +124,3 @@ const Step3 = ({ credentials, handleNext, handleChange }) => {
     );
 
 }
-
-export default Step3;

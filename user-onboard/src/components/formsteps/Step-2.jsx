@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import CountdownTimer from '../base/CountdownTimer';
 
-const Step2 = ({ handleNext, sendOtp, otpExpiry, otpExpired }) => {
+export const Step2 = ({ handleNext, sendOtp, otpExpiry, otpExpired }) => {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const inputRefs = useRef([]);
 
@@ -91,5 +91,3 @@ const Step2 = ({ handleNext, sendOtp, otpExpiry, otpExpired }) => {
     </div>
   );
 };
-
-export default Step2;

@@ -10,7 +10,7 @@ const initialError = {
     nameValid: true,
     message: ""
 }
-const Step5 = ({ credentials, handleNext, handleChange }) => {
+export const Step5 = ({ credentials, handleNext, handleChange }) => {
     const [error, setError] = useState(initialError);
 
     const onNextClick = (event) => {
@@ -105,5 +105,3 @@ const Step5 = ({ credentials, handleNext, handleChange }) => {
         </div>
     );
 }
-
-export default Step5;

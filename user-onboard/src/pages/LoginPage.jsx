@@ -1,14 +1,14 @@
 import { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext.jsx';
-import { Snackbar, Alert, TextField, Fab } from '@mui/material';
+import { TextField } from '@mui/material';
 
 import FormHeading from "../components/base/FormHeading.jsx";
 import Logo from '../components/base/Logo.jsx';
 import { validateEmail, validatePassword } from '../utils/Validator.js';
 import Spinner from '../components/base/Spinner.jsx';
 
-export default function LoginPage() {
+export function LoginPage() {
     const { login, isAuthenticated } = useContext(AuthContext);
     const [credentials, setCredentials] = useState({ email: '', password: '' });
     const [validCredentials, setValidCredentials] = useState({ email: true, password: true })

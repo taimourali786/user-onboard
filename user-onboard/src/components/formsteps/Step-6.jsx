@@ -10,7 +10,7 @@ const initialError = {
     addressValid: true,
     message: ""
 }
-const Step6 = ({ imageBase64, handleNext }) => {
+export const Step6 = ({ imageBase64, handleNext }) => {
     const [selectedFile, setSelectedFile] = useState(imageBase64);
     const [previewUrl, setPreviewUrl] = useState(null);
     // console.log(selectedFile);
@@ -84,5 +84,3 @@ const Step6 = ({ imageBase64, handleNext }) => {
     </div>
     );
 }
-
-export default Step6;

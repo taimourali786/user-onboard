@@ -5,12 +5,7 @@ import MobileStepper from '@mui/material/MobileStepper';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import SwipeableViews from 'react-swipeable-views';
-import Step1 from '../components/formsteps/Step-1';
-import Step2 from '../components/formsteps/Step-2';
-import Step3 from '../components/formsteps/Step-3';
-import Step4 from '../components/formsteps/Step-4';
-import Step5 from '../components/formsteps/Step-5';
-import Step6 from '../components/formsteps/Step-6';
+import { Step1, Step2, Step3, Step4, Step5, Step6 } from '../components/formsteps';
 import FormHeading from '../components/base/FormHeading';
 import { useHttpClient } from '../HttpClient';
 import Logo from '../components/base/Logo';
@@ -75,7 +70,8 @@ const buildInitialState = (user) => {
   return state;
 
 }
-function RegistrationPage() {
+
+export function RegistrationPage() {
   const { performRegistration1, sendOtp, validateOtp, performPost,
     getPreferences, postPreferences, postImage, updateCardStatus } = useHttpClient();
   const initialUserState = getDefaultState();
@@ -288,6 +284,11 @@ function RegistrationPage() {
     heading = "Profile Picture"
   }
   let skipEnabled = activeStep < 4
+  const handleKeyDown = (event) => {
+    if (event.key === 'Tab') {
+      event.preventDefault(); // Prevent the default tab behavior
+    }
+  };
   return (
     <>
       <Spinner loading={loading} />
@@ -316,6 +317,8 @@ function RegistrationPage() {
               axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
               index={activeStep}
               onChangeIndex={handleStepChange}
+              disabled
+              onKeyDown={handleKeyDown}
             >
               <div>
                 {Math.abs(activeStep - 0) <= 5 ? <Step1 credentials={credentials.step1} handleNext={handleStepOneNext} handleChange={handleChange} /> : null}

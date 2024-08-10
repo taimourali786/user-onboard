@@ -1,7 +1,7 @@
 import { Box, FormGroup, FormControlLabel, Checkbox } from "@mui/material";
 import { useState } from "react";
 
-const Step4 = ({ credentials, preferences, handleNext }) => {
+export const Step4 = ({ credentials, preferences, handleNext }) => {
     const [userPreferences, setUserPreferences] = useState(credentials);
     const handleCheckChanged = (key, checked) => {
         setUserPreferences(prevValues => ({
@@ -69,5 +69,3 @@ const Step4 = ({ credentials, preferences, handleNext }) => {
         </div>
     );
 }
-
-export default Step4;

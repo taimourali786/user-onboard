@@ -1,4 +1,4 @@
-export default function NotFoundPage() {
+export function NotFoundPage() {
   return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-indigo-100 p-4 sm:p-8 md:p-12 lg:p-16">
           <div className="flex flex-col lg:flex-row items-center justify-center w-full max-w-7xl gap-8 lg:gap-16">

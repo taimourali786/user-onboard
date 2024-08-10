@@ -9,7 +9,7 @@ const initialError = {
   passwordDisabled: false,
 };
 
-const Step1 = ({ credentials, handleNext, handleChange }) => {
+export const Step1 = ({ credentials, handleNext, handleChange }) => {
   const [error, setError] = useState(initialError);
 
   const onNextClick = () => {
@@ -90,5 +90,3 @@ const Step1 = ({ credentials, handleNext, handleChange }) => {
     </div>
   );
 };
-
-export default Step1;
