@@ -29,10 +29,10 @@ const getDefaultState = () => {
     },
     step3: {
       dob: new Date().toJSON().slice(0, 10),
-      address1: "",
-      address2: "",
-      city: "",
-      country: ""
+      address1: "b",
+      address2: "b",
+      city: "b",
+      country: "b"
     },
     step4: {},
     step5: {
@@ -59,8 +59,8 @@ const buildInitialState = (user) => {
     address2: user.address.address2 || "",
     city: user.address.city || "",
     country: user.address.country || "",
-    completed: true,
-    dob: user.dob !== "0001-01-01" ? user.dob : new Date().toJSON().slice(0, 10)
+    dob: user.dob !== "0001-01-01" ? user.dob : new Date().toJSON().slice(0, 10),
+    completed: user.address.address1 && user.address.address2 && user.address.city && user.address.country
 
   }
   const prefList = user.userPreferences;
@@ -210,7 +210,8 @@ export function RegistrationPage() {
     setCredentials(prevData => ({
       ...prevData,
       step3: {
-        ...prevData,
+        ...formData,
+        completed: true
       }
     }))
     setLoading(false);
@@ -285,9 +286,9 @@ export function RegistrationPage() {
   }
   let skipEnabled = activeStep < 4
   const handleKeyDown = (event) => {
-    if (event.key === 'Tab') {
-      event.preventDefault(); // Prevent the default tab behavior
-    }
+    // if (event.key === 'Tab') {
+    //   event.preventDefault(); // Prevent the default tab behavior
+    // }
   };
   return (
     <>

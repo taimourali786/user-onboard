@@ -33,6 +33,7 @@ export const Step3 = ({ credentials, handleNext, handleChange }) => {
         handleChange(name, value, 'step3')
         setError(initialError);
     }
+
     const nextEnabled = credentials.dob !== "" && credentials.address1 !== "" && credentials.address2 !== ""
         && credentials.city !== "" && credentials.country !== "";
     return (<>
@@ -124,3 +125,4 @@ export const Step3 = ({ credentials, handleNext, handleChange }) => {
     );
 
 }
+

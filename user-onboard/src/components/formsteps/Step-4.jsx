@@ -28,6 +28,7 @@ export const Step4 = ({ credentials, preferences, handleNext }) => {
     }
     let preferenceCheckboxes = Object.keys(preferences).map(p => {
         const pref = preferences[p];
+        const checked = userPreferences[pref.preferenceId] !== undefined ? userPreferences[pref.preferenceId] : false;
         return <FormControlLabel
             key={pref.preferenceId}
 
@@ -36,7 +37,7 @@ export const Step4 = ({ credentials, preferences, handleNext }) => {
                     key={pref.preferenceId}
                     name={pref.preferenceName}
                     onChange={event => handleCheckChanged(pref.preferenceId, event.target.checked)}
-                    checked={userPreferences[pref.preferenceId]}
+                    checked={checked}
                 />
             }
             label={pref.preferenceName}
