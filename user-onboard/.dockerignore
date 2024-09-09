@@ -1,0 +1,39 @@
+
+# Exclude Python cache files
+**/__pycache__
+**/*.pyc
+**/*.pyo
+
+# Exclude virtual environments
+venv/
+env/
+*.venv/
+*.env/
+
+# Exclude environment variable files
+.env
+*.env
+
+# Exclude logs
+logs/
+*.log
+
+# Exclude database files
+*.sqlite3
+
+# Exclude media and static files (optional, depending on your use case)
+media/
+staticfiles/
+
+# Exclude local IDE configuration files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Exclude Docker-related files
+Dockerfile
+compose.yml
+
+# Exclude Node modules
+node_modules/*
