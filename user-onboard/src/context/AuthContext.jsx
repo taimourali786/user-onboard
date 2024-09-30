@@ -1,57 +1,53 @@
 import { createContext, useState, useEffect, useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
 import { useHttpClient } from '../HttpClient';
-import { useLoading } from './LoadingContext';
+import useHttp from '../hooks/useHttp';
+import { getBearerToken } from '../utils/authUtil';
+import { userActions } from '../store/user';
+import { GET_USER, LOGIN } from '../ApiUrl';
 
 export const AuthContext = createContext();
-
+const defaultConfig = {
+    method: 'GET',
+    headers: {
+        'Authorization': getBearerToken()
+    }
+}
 export const AuthProvider = ({ children }) => {
+    const { response, performApiCall } = useHttp(GET_USER, defaultConfig);
+    const dispatch = useDispatch();
+    const { user, isAuthenticated } = useSelector(state => ({
+        user: state.user.user,
+        isAuthenticated: state.user.isAuthenticated
+    }))
     const { performLogin, getUser } = useHttpClient();
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [user, setUser] = useState(null);
-    const { startLoading, stopLoading } = useLoading();
 
-    const getUserInfo = async () => {
-        try {
-            const apiUser = await getUser();
-            setUser(apiUser);
-        } catch (error) {
-            logout();
+    const setUser = async (fn) => {
+        const token = getBearerToken();
+        if (token) {
+            try {
+                const user = await fn();
+                dispatch(userActions.setUser({ user: response }));
+            } catch (e) {
+                //  TODO: Handle error
+            } finally {
+            }
         }
     }
 
     useEffect(() => {
-        const initializeAuth = async () => {
-            const token = localStorage.getItem('authorization');
-            if (token) {
-                startLoading();
-                    await getUserInfo();
-                setIsAuthenticated(true);
-                stopLoading();
-            }
-        };
-        initializeAuth();
+        setUser(getUser)
+        // if (response != null) {
+        //     dispatch(userActions.setUser({ user: response }));
+        // }
     }, []);
 
     const login = async (credentials) => {
-        try {
-            startLoading();
-            const token = await performLogin(credentials);
-            if (token) {
-                await getUserInfo();
-                setIsAuthenticated(true);
-            }
-        } catch (error) {
-            console.error('Login failed', error);
-            setIsAuthenticated(false);
-        } finally {
-            stopLoading();
-        }
+        setUser(() => performLogin(credentials));
     };
 
     const logout = () => {
-        localStorage.removeItem('authorization');
-        setUser(null);
-        setIsAuthenticated(false);
+        dispatch(userActions.resetUser())
     };
 
     const refreshUser = async () => {

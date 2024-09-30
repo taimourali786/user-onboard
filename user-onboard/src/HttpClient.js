@@ -1,6 +1,7 @@
 import { useError } from './context/ErrorContext';
 
 import { GET_PREFERENCES, GET_USER, LOGIN, REGISTRAtION_1, SEND_OTP, VALIDATE_OTP, POST_PREFERENCES, UPDATE_IMAGE, CARD_STATUS_UPDATE } from "./ApiUrl";
+import { getBearerToken } from './utils/authUtil';
 
 export const useHttpClient = () => {
     const { handleError } = useError();
@@ -10,7 +11,7 @@ export const useHttpClient = () => {
         const fullUrl = queryString ? `${url}?${queryString}` : url;
 
         try {
-            const token = getToken();
+            const token = getBearerToken();
             const response = await fetch(fullUrl, {
                 method: 'GET',
                 headers: {
@@ -31,7 +32,7 @@ export const useHttpClient = () => {
 
     const performPost = async (url, body = {}) => {
         try {
-            const token = getToken();
+            const token = getBearerToken();
             const response = await fetch(url, {
                 method: 'POST',
                 body: JSON.stringify(body),
@@ -116,11 +117,6 @@ export const useHttpClient = () => {
         postImage,
         updateCardStatus
     };
-};
-
-const getToken = () => {
-    const token = localStorage.getItem('authorization');
-    return "Bearer " + token;
 };
 
 
