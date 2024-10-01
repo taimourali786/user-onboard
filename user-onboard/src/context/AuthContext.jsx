@@ -25,34 +25,14 @@ const loginConfig = {
 export const AuthProvider = ({ children }) => {
     const { performApiCall } = useHttp(GET_USER, getUserConfig);
     const { performApiCall: performLogin } = useHttp(LOGIN, loginConfig);
-    // const { response }
     const dispatch = useDispatch();
     const { user } = useSelector(state => ({
         user: state.user.user
     }))
-    // const { performLogin, getUser } = useHttpClient();
-
-    // const setUser = async (fn) => {
-    //     const token = getBearerToken();
-    //     if (token) {
-    //         try {
-    //             const user = await fn();
-    //             dispatch(userActions.setUser({ user: response }));
-    //         } catch (e) {
-    //             //  TODO: Handle error
-    //         } finally {
-    //         }
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     performApiCall()
-    // }, [user]);
 
     const login = async (credentials) => {
         console.log('Loggin')
         await performLogin(JSON.stringify(credentials))
-        // setUser(() => performLogin(JSON.stringify(credentials)));
     };
 
     const logout = () => {

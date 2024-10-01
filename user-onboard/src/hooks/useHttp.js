@@ -17,12 +17,18 @@ const sendRequest = async (url, config, dispatch) => {
                     status: response.status
                 }
             }))
+            // throw new Error('Request Failed!')
         }
         return json;
     } catch (e) {
         dispatch(errorActions.setError({
-            message: e.message,
+            error: {
+
+                message: e.message,
+                status: 500
+            }
         }))
+        throw new Error(e.message)
     }
 }
 
@@ -33,15 +39,14 @@ const useHttp = (url, config, initialState) => {
 
     //  This function will perform Api Call
     const performApiCall = useCallback(async (jsonBody) => {
-        dispatch(loadingActions.startLoading())
-        const newConfig = { ...config, body: jsonBody }
-        const responseJson = await sendRequest(url, newConfig, dispatch)
-        dispatch(userActions.setUser(responseJson));
-        dispatch(loadingActions.stopLoading())
-        // try {
-        // } catch (error) {
-        // } finally {
-        // }
+        try {
+            dispatch(loadingActions.startLoading())
+            const newConfig = { ...config, body: jsonBody }
+            const responseJson = await sendRequest(url, newConfig, dispatch)
+            dispatch(userActions.setUser(responseJson));
+        } finally {
+            dispatch(loadingActions.stopLoading())
+        }
     }, [url, config])
 
     useEffect(() => {

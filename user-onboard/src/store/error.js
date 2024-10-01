@@ -6,7 +6,6 @@ const errorSlice = createSlice({
     initialState: { status: null, message: null },
     reducers: {
         setError(state, action) {
-            console.log(action)
             state.status = action.payload.error.status
             state.message = action.payload.error.message
         },
