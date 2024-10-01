@@ -1,32 +1,39 @@
 import React, { useEffect } from 'react';
 import { useError } from '../../context/ErrorContext';
 import { Snackbar, Alert } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { errorActions } from '../../store/error';
 
 
 export const ErrorAlert = () => {
-    const { error, resetError } = useError();
+    const dispatch = useDispatch();
+    const error = useSelector(state => state.error);
+
+    const resetError = () => {
+        dispatch(errorActions.resetError())
+    }
 
     useEffect(() => {
-        if (error) {
+        if (error.message) {
             const timer = setTimeout(() => {
                 resetError();
             }, 5000); // Hide error after 5 seconds
             return () => clearTimeout(timer);
         }
-    }, [error, resetError]);
+    }, [error]);
 
     if (!error) return null;
 
     return (
         <div className="error-alert">
             <Snackbar
-                open={error !== null}
+                open={error.message !== null}
                 autoHideDuration={5000}
                 onClose={resetError}
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             >
                 <Alert onClose={resetError} severity="error" sx={{ width: '300px' }}>
-                    {error}
+                    {error.status && `${error.status} : `}{error.message}
                 </Alert>
             </Snackbar>
         </div>
