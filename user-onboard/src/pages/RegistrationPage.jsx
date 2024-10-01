@@ -12,7 +12,7 @@ import Logo from '../components/base/Logo';
 import { REGISTRAtION_2 } from '../ApiUrl';
 import { AuthContext } from '../context/AuthContext';
 import Spinner from '../components/base/Spinner';
-import { useSuccess } from '../context/SuccessContext';
+// import { useSuccess } from '../context/SuccessContext';
 
 
 const getDefaultState = () => {

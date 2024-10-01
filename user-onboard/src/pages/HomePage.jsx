@@ -3,8 +3,6 @@ import { FormControlLabel, Checkbox } from "@mui/material";
 import { useAuth } from '../context/AuthContext.jsx';
 import ProfileImage from "../components/base/ProfileImage.jsx";
 import UserInfo from "./child-pages/UserInfo.jsx";
-import { useLoading } from "../context/LoadingContext.jsx";
-
 export function HomePage() {
   const { logout, user } = useAuth();
   const [isDropdownOpen, setDropdownOpen] = useState(false);

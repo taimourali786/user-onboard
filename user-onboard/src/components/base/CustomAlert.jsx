@@ -1,39 +1,37 @@
 import React, { useEffect } from 'react';
-import { useError } from '../../context/ErrorContext';
 import { Snackbar, Alert } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { errorActions } from '../../store/error';
+import { alertActions } from '../../store/alert';
 
 
-export const ErrorAlert = () => {
+export const CustomAlert = () => {
     const dispatch = useDispatch();
-    const error = useSelector(state => state.error);
-
-    const resetError = () => {
-        dispatch(errorActions.resetError())
+    const alert = useSelector(state => state.alert);
+    const resetAlert = () => {
+        dispatch(alertActions.resetAlert())
     }
 
     useEffect(() => {
-        if (error.message) {
+        if (alert.content.message) {
             const timer = setTimeout(() => {
-                resetError();
+                resetAlert();
             }, 5000); // Hide error after 5 seconds
             return () => clearTimeout(timer);
         }
-    }, [error]);
+    }, [alert]);
 
-    if (!error) return null;
+    if (!alert.content.message) return null;
 
     return (
         <div className="error-alert">
             <Snackbar
-                open={error.message !== null}
+                open={alert.content.message !== null}
                 autoHideDuration={5000}
-                onClose={resetError}
+                onClose={resetAlert}
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             >
-                <Alert onClose={resetError} severity="error" sx={{ width: '300px' }}>
-                    {error.status && `${error.status} : `}{error.message}
+                <Alert onClose={resetAlert} severity={alert.style} sx={{ width: '300px' }}>
+                    {alert.content.status && `${alert.content.status} : `}{alert.content.message}
                 </Alert>
             </Snackbar>
         </div>

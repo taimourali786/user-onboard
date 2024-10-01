@@ -1,13 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { userReducer } from './user';
 import { loadingReducer } from './loading';
-import { errorReducer } from './error';
+import { alertReducer } from './alert';
 
 const store = configureStore({
     reducer: {
         user: userReducer,
         loading: loadingReducer,
-        error: errorReducer
+        alert: alertReducer
 
     }
 })

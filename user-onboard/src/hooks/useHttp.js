@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from 'react-redux'
+import { useCallback, useEffect } from "react";
+import { useDispatch } from 'react-redux'
 import { loadingActions } from '../store/loading';
-import { errorActions } from "../store/error";
 import { getToken } from "../utils/authUtil";
 import { userActions } from "../store/user";
+import { alertActions } from "../store/alert";
 
 
 const sendRequest = async (url, config, dispatch) => {
@@ -11,8 +11,9 @@ const sendRequest = async (url, config, dispatch) => {
         const response = await fetch(url, config);
         const json = await response.json();
         if (!response.ok) {
-            dispatch(errorActions.setError({
-                error: {
+            dispatch(alertActions.setAlert({
+                alert: {
+                    type: 'error',
                     message: json.responseMessage,
                     status: response.status
                 }
@@ -21,9 +22,9 @@ const sendRequest = async (url, config, dispatch) => {
         }
         return json;
     } catch (e) {
-        dispatch(errorActions.setError({
-            error: {
-
+        dispatch(alertActions.setError({
+            alert: {
+                type: 'error',
                 message: e.message,
                 status: 500
             }

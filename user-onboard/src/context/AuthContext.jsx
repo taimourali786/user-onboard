@@ -31,8 +31,8 @@ export const AuthProvider = ({ children }) => {
     }))
 
     const login = async (credentials) => {
-        console.log('Loggin')
         await performLogin(JSON.stringify(credentials))
+        // setUser(() => performLogin(JSON.stringify(credentials)));
     };
 
     const logout = () => {
